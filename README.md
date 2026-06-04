@@ -32,20 +32,25 @@ python3 -m http.server 8000
 # then visit http://localhost:8000
 ```
 
-## Configure where responses go
+## Where responses go (Google Sheets)
 
-Open `index.html` and find the **CONFIGURATION** block near the top of the
-`<script>`:
+Submissions are sent to a **Google Apps Script Web App** that appends each
+response as a row in a Google Sheet you own — free, unlimited, no plugin.
+
+**Setup (one time, ~5 min):** follow [`GOOGLE-SHEETS-SETUP.md`](GOOGLE-SHEETS-SETUP.md).
+You create a Sheet, paste in [`google-apps-script/Code.gs`](google-apps-script/Code.gs),
+deploy it as a Web app, and paste the resulting URL into the **CONFIGURATION**
+block near the top of the `<script>` in `index.html`:
 
 ```js
-var JFT_ENDPOINT = "";   // e.g. "/wp-json/jft/v1/survey"
+var JFT_ENDPOINT = "";   // paste your https://script.google.com/macros/s/.../exec URL
 ```
 
 - Leave it **empty** to run in **demo mode** — the form shows the success
   screen and logs the JSON payload to the browser console (great for testing).
-- Set it to a URL and submissions are `POST`ed there as JSON.
+- Set it to your Web app URL and each submission becomes a row in the Sheet.
 
-The submitted JSON looks like:
+The submitted JSON (what the Apps Script receives) looks like:
 
 ```json
 {

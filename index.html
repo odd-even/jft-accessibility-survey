@@ -419,13 +419,20 @@
   /* ============================================================
      CONFIGURATION
      ------------------------------------------------------------
-     Set JFT_ENDPOINT to the URL that should receive submissions
-     (e.g. a WordPress REST route, an admin-ajax handler, or a
-     form plugin endpoint). Leave it empty ("") to run in demo
-     mode, which simply shows the success screen and logs the
-     JSON payload to the browser console.
+     Responses are sent to a Google Apps Script Web App, which
+     appends each submission as a row in a Google Sheet.
+
+     1. Create a Google Sheet.
+     2. Extensions > Apps Script, paste in google-apps-script/Code.gs
+        from this repo, then Deploy > New deployment > Web app
+        (Execute as: Me, Who has access: Anyone).
+     3. Copy the Web app URL and paste it below.
+
+     See GOOGLE-SHEETS-SETUP.md for step-by-step instructions.
+     Leave JFT_ENDPOINT empty ("") to run in demo mode (logs the
+     payload to the console and shows the success screen).
      ============================================================ */
-  var JFT_ENDPOINT = "";              // e.g. "/wp-json/jft/v1/survey"
+  var JFT_ENDPOINT = "";              // e.g. "https://script.google.com/macros/s/AKfy.../exec"
   var JFT_STORAGE_KEY = "jft-accessibility-survey-v1";
 
   /* ----- Survey content (data-driven) ----- */
@@ -910,19 +917,23 @@
       return;
     }
 
+    // Google Apps Script Web Apps don't send CORS headers, so we POST in
+    // "no-cors" mode with a text/plain body (which avoids a CORS preflight).
+    // The response is opaque — we can't read it — so a resolved request is
+    // treated as success (fire-and-forget). Network failures still reject.
     fetch(JFT_ENDPOINT, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify(payload)
     })
-      .then(function (res) {
-        if (!res.ok) throw new Error("HTTP " + res.status);
+      .then(function () {
         showSuccess();
       })
       .catch(function (err) {
         console.error("[JFT Survey] Submission failed:", err);
         submitBtn.disabled = false;
-        showError(QUESTIONS[current].id, "Something went wrong sending your response. Please try again.");
+        showError(QUESTIONS[current].id, "Something went wrong sending your response. Please check your connection and try again.");
       });
   }
 
