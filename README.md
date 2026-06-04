@@ -1,5 +1,9 @@
 # Jolly Farmer Transport — Accessibility Survey
 
+**Live preview:** https://odd-even.github.io/jft-accessibility-survey/
+**Repository:** https://github.com/odd-even/jft-accessibility-survey
+**Embed file (raw):** https://raw.githubusercontent.com/odd-even/jft-accessibility-survey/main/index.html
+
 A slick, fully accessible, multi-step web survey. Questions "page in" one at a
 time with smooth transitions, a progress bar, validation, and autosave. The
 whole thing lives in a **single self-contained file** (`index.html`) — all CSS
