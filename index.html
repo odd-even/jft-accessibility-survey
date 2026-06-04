@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Jolly Farmer Transport — Accessibility Survey</title>
+<meta name="description" content="Help us improve accessibility at Jolly Farmer Transport. This short, confidential survey takes a few minutes." />
+<style>
+  /* ============================================================
+     Jolly Farmer Transport — Accessibility Survey
+     Self-contained: all CSS + JS live in this single file so it
+     can be pasted into a WordPress "Custom HTML" block or saved
+     as a standalone page. Scoped under #jft-survey to avoid
+     clashing with theme styles.
+     ============================================================ */
+  #jft-survey {
+    --jft-bg: #eef4ee;
+    --jft-card: #ffffff;
+    --jft-ink: #1d2b24;
+    --jft-muted: #5b6b62;
+    --jft-line: #d8e2db;
+    --jft-green: #1f7a4d;
+    --jft-green-dark: #155c39;
+    --jft-green-soft: #e6f2ea;
+    --jft-accent: #d99a2b;
+    --jft-danger: #b3261e;
+    --jft-focus: #2e9e63;
+    --jft-radius: 16px;
+    --jft-shadow: 0 10px 40px rgba(21, 92, 57, 0.10), 0 2px 8px rgba(21, 92, 57, 0.06);
+    --jft-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--jft-ink);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+
+    min-height: 100%;
+    background:
+      radial-gradient(1200px 500px at 50% -10%, #f6fbf7 0%, rgba(246,251,247,0) 60%),
+      var(--jft-bg);
+    padding: clamp(16px, 4vw, 48px) clamp(12px, 4vw, 32px);
+    display: flex;
+    justify-content: center;
+  }
+  #jft-survey *,
+  #jft-survey *::before,
+  #jft-survey *::after { box-sizing: border-box; }
+  #jft-survey [hidden] { display: none !important; }
+
+  #jft-survey .jft-shell {
+    width: 100%;
+    max-width: 720px;
+  }
+
+  /* ---------- Header ---------- */
+  #jft-survey .jft-header {
+    text-align: center;
+    margin-bottom: 18px;
+  }
+  #jft-survey .jft-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--jft-green-soft);
+    color: var(--jft-green-dark);
+    font-weight: 600;
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 999px;
+    margin-bottom: 12px;
+  }
+  #jft-survey .jft-badge svg { width: 16px; height: 16px; }
+  #jft-survey .jft-title {
+    font-size: clamp(1.4rem, 3.5vw, 2rem);
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  /* ---------- Card ---------- */
+  #jft-survey .jft-card {
+    background: var(--jft-card);
+    border-radius: var(--jft-radius);
+    box-shadow: var(--jft-shadow);
+    border: 1px solid var(--jft-line);
+    overflow: hidden;
+  }
+
+  /* ---------- Progress ---------- */
+  #jft-survey .jft-progress-wrap {
+    padding: 18px clamp(18px, 4vw, 34px) 0;
+  }
+  #jft-survey .jft-progress-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 0.85rem;
+    color: var(--jft-muted);
+    margin-bottom: 8px;
+  }
+  #jft-survey .jft-progress-meta strong { color: var(--jft-green-dark); font-weight: 700; }
+  #jft-survey .jft-progress-track {
+    height: 8px;
+    background: var(--jft-green-soft);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  #jft-survey .jft-progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--jft-green), var(--jft-focus));
+    border-radius: 999px;
+    transition: width 0.5s var(--jft-ease);
+  }
+
+  /* ---------- Body / steps ---------- */
+  #jft-survey .jft-body {
+    padding: clamp(20px, 4vw, 34px);
+    position: relative;
+  }
+  #jft-survey .jft-step { display: none; }
+  #jft-survey .jft-step.is-active {
+    display: block;
+    animation: jft-page-in 0.5s var(--jft-ease) both;
+  }
+  @keyframes jft-page-in {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  #jft-survey .jft-q-kicker {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--jft-green);
+    margin-bottom: 6px;
+  }
+  #jft-survey .jft-q-title {
+    font-size: clamp(1.15rem, 2.6vw, 1.4rem);
+    font-weight: 700;
+    margin: 0 0 6px;
+    outline: none;
+  }
+  #jft-survey .jft-q-help {
+    color: var(--jft-muted);
+    font-size: 0.95rem;
+    margin: 0 0 18px;
+  }
+
+  /* ---------- Options ---------- */
+  #jft-survey fieldset { border: 0; margin: 0; padding: 0; }
+  #jft-survey legend { padding: 0; width: 100%; }
+  #jft-survey .jft-options { display: grid; gap: 10px; }
+
+  #jft-survey .jft-option {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 16px;
+    border: 1.5px solid var(--jft-line);
+    border-radius: 12px;
+    cursor: pointer;
+    background: #fff;
+    transition: border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease, transform 0.06s ease;
+  }
+  #jft-survey .jft-option:hover { border-color: var(--jft-focus); background: #fafdfb; }
+  #jft-survey .jft-option:active { transform: scale(0.995); }
+  #jft-survey .jft-option input {
+    position: absolute;
+    opacity: 0;
+    width: 1px; height: 1px;
+    margin: 0;
+  }
+  #jft-survey .jft-mark {
+    flex: 0 0 auto;
+    width: 24px; height: 24px;
+    margin-top: 1px;
+    border: 2px solid #b9c8bf;
+    background: #fff;
+    display: grid;
+    place-items: center;
+    transition: border-color 0.18s ease, background 0.18s ease;
+  }
+  #jft-survey .jft-option[data-type="checkbox"] .jft-mark { border-radius: 7px; }
+  #jft-survey .jft-option[data-type="radio"] .jft-mark { border-radius: 50%; }
+  #jft-survey .jft-mark svg { width: 15px; height: 15px; opacity: 0; transform: scale(0.6); transition: opacity 0.15s ease, transform 0.15s var(--jft-ease); color: #fff; }
+  #jft-survey .jft-mark .jft-dot { width: 10px; height: 10px; border-radius: 50%; background: #fff; opacity: 0; transform: scale(0.4); transition: opacity 0.15s ease, transform 0.15s var(--jft-ease); }
+
+  #jft-survey .jft-option-text { font-size: 1rem; padding-top: 1px; }
+
+  /* checked states */
+  #jft-survey .jft-option:has(input:checked) {
+    border-color: var(--jft-green);
+    background: var(--jft-green-soft);
+    box-shadow: inset 0 0 0 1px var(--jft-green);
+  }
+  #jft-survey .jft-option:has(input:checked) .jft-mark {
+    border-color: var(--jft-green);
+    background: var(--jft-green);
+  }
+  #jft-survey .jft-option:has(input:checked) .jft-mark svg,
+  #jft-survey .jft-option:has(input:checked) .jft-mark .jft-dot { opacity: 1; transform: scale(1); }
+
+  /* keyboard focus */
+  #jft-survey .jft-option:has(input:focus-visible) {
+    outline: 3px solid rgba(46,158,99,0.45);
+    outline-offset: 2px;
+  }
+
+  /* ---------- "Other — specify" reveal ---------- */
+  #jft-survey .jft-other-wrap {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.35s var(--jft-ease);
+  }
+  #jft-survey .jft-other-wrap.is-open { grid-template-rows: 1fr; }
+  #jft-survey .jft-other-inner { overflow: hidden; }
+  #jft-survey .jft-other-wrap.is-open .jft-other-inner { padding-top: 10px; }
+  #jft-survey .jft-other-input,
+  #jft-survey .jft-textarea {
+    width: 100%;
+    font: inherit;
+    color: var(--jft-ink);
+    padding: 12px 14px;
+    border: 1.5px solid var(--jft-line);
+    border-radius: 10px;
+    background: #fff;
+    resize: vertical;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  }
+  #jft-survey .jft-textarea { min-height: 140px; }
+  #jft-survey .jft-other-input:focus,
+  #jft-survey .jft-textarea:focus {
+    outline: none;
+    border-color: var(--jft-green);
+    box-shadow: 0 0 0 3px rgba(46,158,99,0.18);
+  }
+
+  /* ---------- Error ---------- */
+  #jft-survey .jft-error {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    color: var(--jft-danger);
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-top: 14px;
+  }
+  #jft-survey .jft-error.is-shown { display: flex; }
+  #jft-survey .jft-error svg { width: 18px; height: 18px; flex: 0 0 auto; }
+
+  /* ---------- Footer / nav ---------- */
+  #jft-survey .jft-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 18px clamp(18px, 4vw, 34px);
+    border-top: 1px solid var(--jft-line);
+    background: #fbfdfb;
+  }
+  #jft-survey .jft-btn {
+    appearance: none;
+    font: inherit;
+    font-weight: 700;
+    border-radius: 11px;
+    padding: 13px 24px;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.06s ease, background 0.18s ease, box-shadow 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+  }
+  #jft-survey .jft-btn:active { transform: translateY(1px); }
+  #jft-survey .jft-btn:focus-visible { outline: 3px solid rgba(46,158,99,0.5); outline-offset: 2px; }
+  #jft-survey .jft-btn svg { width: 18px; height: 18px; }
+  #jft-survey .jft-btn-primary {
+    background: var(--jft-green);
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(31,122,77,0.28);
+  }
+  #jft-survey .jft-btn-primary:hover { background: var(--jft-green-dark); box-shadow: 0 8px 22px rgba(21,92,57,0.32); }
+  #jft-survey .jft-btn-ghost {
+    background: transparent;
+    color: var(--jft-muted);
+    border-color: var(--jft-line);
+  }
+  #jft-survey .jft-btn-ghost:hover { color: var(--jft-green-dark); border-color: var(--jft-green); background: #fff; }
+  #jft-survey .jft-btn[hidden] { display: none; }
+  #jft-survey .jft-btn:disabled { opacity: 0.6; cursor: progress; }
+
+  /* ---------- Intro & success panels ---------- */
+  #jft-survey .jft-panel { text-align: center; padding: clamp(8px, 2vw, 18px) 0; }
+  #jft-survey .jft-panel-icon {
+    width: 68px; height: 68px;
+    margin: 0 auto 18px;
+    border-radius: 50%;
+    background: var(--jft-green-soft);
+    color: var(--jft-green);
+    display: grid; place-items: center;
+  }
+  #jft-survey .jft-panel-icon svg { width: 34px; height: 34px; }
+  #jft-survey .jft-panel h2 { font-size: clamp(1.3rem, 3vw, 1.7rem); margin: 0 0 10px; }
+  #jft-survey .jft-panel p { color: var(--jft-muted); max-width: 46ch; margin: 0 auto 10px; }
+  #jft-survey .jft-meta-list {
+    list-style: none;
+    padding: 0;
+    margin: 18px auto 4px;
+    max-width: 420px;
+    display: grid;
+    gap: 10px;
+    text-align: left;
+  }
+  #jft-survey .jft-meta-list li {
+    display: flex; gap: 10px; align-items: flex-start;
+    font-size: 0.95rem; color: var(--jft-ink);
+  }
+  #jft-survey .jft-meta-list svg { width: 20px; height: 20px; color: var(--jft-green); flex: 0 0 auto; margin-top: 1px; }
+  #jft-survey .jft-panel-actions { margin-top: 26px; display: flex; justify-content: center; }
+
+  #jft-survey .jft-success-anim {
+    width: 84px; height: 84px; margin: 0 auto 18px;
+    border-radius: 50%;
+    background: var(--jft-green);
+    display: grid; place-items: center;
+    animation: jft-pop 0.5s var(--jft-ease) both;
+  }
+  #jft-survey .jft-success-anim svg { width: 44px; height: 44px; color: #fff; }
+  @keyframes jft-pop { 0% { transform: scale(0.4); opacity: 0; } 60% { transform: scale(1.08); } 100% { transform: scale(1); opacity: 1; } }
+
+  #jft-survey .jft-footnote {
+    text-align: center;
+    color: var(--jft-muted);
+    font-size: 0.8rem;
+    margin-top: 16px;
+  }
+
+  /* visually hidden but available to screen readers */
+  #jft-survey .jft-sr-only {
+    position: absolute !important;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0,0,0,0);
+    white-space: nowrap; border: 0;
+  }
+
+  @media (max-width: 480px) {
+    #jft-survey .jft-footer { flex-direction: row; }
+    #jft-survey .jft-btn { padding: 12px 18px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #jft-survey *,
+    #jft-survey *::before,
+    #jft-survey *::after {
+      animation-duration: 0.001ms !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+  <div id="jft-survey">
+    <div class="jft-shell">
+      <header class="jft-header">
+        <span class="jft-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"/><path d="M9.5 12.5l1.8 1.8 3.7-4"/></svg>
+          Accessibility
+        </span>
+        <h1 class="jft-title">Jolly Farmer Transport Accessibility Survey</h1>
+      </header>
+
+      <form id="jft-form" class="jft-card" novalidate>
+        <div class="jft-progress-wrap" id="jft-progress-wrap" hidden>
+          <div class="jft-progress-meta">
+            <span id="jft-step-label" aria-live="polite">Question 1 of 7</span>
+            <span><strong id="jft-percent">0%</strong> complete</span>
+          </div>
+          <div class="jft-progress-track" role="progressbar" aria-label="Survey progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="jft-progress-role">
+            <div class="jft-progress-bar" id="jft-progress-bar"></div>
+          </div>
+        </div>
+
+        <div class="jft-body" id="jft-body">
+          <!-- Steps are injected here by JavaScript -->
+        </div>
+
+        <div class="jft-footer" id="jft-footer" hidden>
+          <button type="button" class="jft-btn jft-btn-ghost" id="jft-back">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+            Back
+          </button>
+          <button type="button" class="jft-btn jft-btn-primary" id="jft-next">
+            Next
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+          <button type="submit" class="jft-btn jft-btn-primary" id="jft-submit" hidden>
+            Submit survey
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>
+          </button>
+        </div>
+      </form>
+
+      <p class="jft-footnote">Your responses are confidential and help us improve accessibility for everyone.</p>
+    </div>
+  </div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ============================================================
+     CONFIGURATION
+     ------------------------------------------------------------
+     Set JFT_ENDPOINT to the URL that should receive submissions
+     (e.g. a WordPress REST route, an admin-ajax handler, or a
+     form plugin endpoint). Leave it empty ("") to run in demo
+     mode, which simply shows the success screen and logs the
+     JSON payload to the browser console.
+     ============================================================ */
+  var JFT_ENDPOINT = "";              // e.g. "/wp-json/jft/v1/survey"
+  var JFT_STORAGE_KEY = "jft-accessibility-survey-v1";
+
+  /* ----- Survey content (data-driven) ----- */
+  var QUESTIONS = [
+    {
+      id: "conditions",
+      type: "checkbox",
+      title: "Do you have any of the following difficulties or long-term conditions?",
+      help: "Select all that apply.",
+      options: [
+        { value: "seeing", label: "Difficulty seeing even when wearing glasses or contact lenses" },
+        { value: "hearing", label: "Difficulty hearing even when using a hearing aid or cochlear implant" },
+        { value: "mobility", label: "Difficulty walking, using stairs, using your hands or fingers, or doing other physical activities" },
+        { value: "cognitive", label: "Difficulty learning, remembering or concentrating" },
+        { value: "mental_health", label: "Any emotional, psychological or mental health conditions (e.g., anxiety, depression, bipolar disorder, substance abuse, anorexia)" },
+        { value: "other_condition", label: "Any other health problem or long-term condition that has lasted or is expected to last for six or more months" },
+        { value: "none", label: "I do not have any difficulty or long-term condition that has lasted or is expected to last for six or more months", exclusive: true }
+      ]
+    },
+    {
+      id: "interacted",
+      type: "radio",
+      title: "Have you interacted with Jolly Farmer in the past 12 months?",
+      options: [
+        { value: "yes", label: "Yes" },
+        { value: "no", label: "No" }
+      ]
+    },
+    {
+      id: "physical_environment",
+      type: "checkbox",
+      title: "In the past 12 months, have you experienced difficulties with any of the following features in the physical environment at Jolly Farmer because of your condition?",
+      help: "Select all that apply.",
+      options: [
+        { value: "entrances", label: "Entrances or exits (e.g., narrow steps, lack of ramps, difficult to open doors)" },
+        { value: "sidewalks", label: "Sidewalks or pedestrian paths (e.g., poor condition, difficulty with width or slope)" },
+        { value: "layout", label: "Layout of workplace (e.g., confusing floorplans, narrow hallways or stairs)" },
+        { value: "lighting_sound", label: "Lighting or sound levels" },
+        { value: "parking_washrooms", label: "Lack of accessible parking, washrooms" },
+        { value: "signs", label: "Complicated or unclear signs" },
+        { value: "other", label: "Other", other: true },
+        { value: "none", label: "I have not experienced any difficulties with any features in the physical environment because of my condition", exclusive: true }
+      ]
+    },
+    {
+      id: "technology",
+      type: "checkbox",
+      title: "In the past 12 months, have you experienced any of the following difficulties related to technology at Jolly Farmer because of your condition?",
+      help: "Select all that apply.",
+      options: [
+        { value: "adaptive_hardware", label: "Lack of access to required adaptive hardware or software" },
+        { value: "inaccessible_files", label: "Electronic files or documents with a lack of accessibility features" },
+        { value: "virtual_meetings", label: "Virtual meeting platforms with a lack of accessibility features" },
+        { value: "complicated_tech", label: "Complicated or unclear technology (e.g., designs or navigation issues of websites)" },
+        { value: "incompatible_assistive", label: "Assistive technology not compatible with software" },
+        { value: "connectivity", label: "Poor Internet connectivity limited use of accessibility or adaptive features" },
+        { value: "equipment_repair", label: "Equipment or technology in need of repair or upgrade limited use of accessibility or adaptive features" },
+        { value: "other", label: "Other", other: true },
+        { value: "none", label: "I have not experienced any difficulties related to technology because of my condition", exclusive: true }
+      ]
+    },
+    {
+      id: "communication",
+      type: "checkbox",
+      title: "In the past 12 months, have you experienced any of the following difficulties related to communication at Jolly Farmer because of your condition?",
+      help: "Select all that apply.",
+      options: [
+        { value: "alt_formats", label: "Physical and online materials not offered or available in alternate formats (e.g., embossed or electronic braille, large print, digital audio formats)" },
+        { value: "plain_language", label: "Instructions, feedback or job criteria unclear or not given in plain language" },
+        { value: "comm_aids", label: "Lack of availability of required technical communication aids (e.g., voice synthesizer, TTY, infrared system or portable note-taker)" },
+        { value: "sign_language", label: "Sign language interpretation services not offered or available" },
+        { value: "captioning", label: "No captioning or verbal descriptions of images, videos or printed text" },
+        { value: "text_size", label: "Physical or online materials with text size that was too small or font that was difficult to read" },
+        { value: "poorly_organized", label: "Files or documents that were unclear or poorly organized" },
+        { value: "other", label: "Other", other: true },
+        { value: "none", label: "I have not experienced any difficulties related to communication because of my condition", exclusive: true }
+      ]
+    },
+    {
+      id: "other_difficulties",
+      type: "checkbox",
+      title: "In the past 12 months, have you experienced any of the following other difficulties because of your condition?",
+      help: "Select all that apply.",
+      options: [
+        { value: "accommodations", label: "Difficulties related to accommodations (adjustments or alternative arrangements such as flexible schedules, workstation modifications, specialized software, aids or assistive devices)" },
+        { value: "discrimination", label: "Discrimination from colleagues or managers" },
+        { value: "lack_support", label: "Lack of support or respect from colleagues or managers" },
+        { value: "disclosing", label: "Did not feel comfortable disclosing disability or condition" },
+        { value: "unaware_options", label: "Unaware of accessibility options in the workplace" },
+        { value: "new_role", label: "Difficulties when starting a new job, position or role (e.g., no role clarity, slow process, information overload)" },
+        { value: "training_needs", label: "Training opportunities did not meet accessibility needs" },
+        { value: "training_market", label: "Training or experience was not adequate for the current job market" },
+        { value: "screening_complex", label: "Application or screening process was long or complex" },
+        { value: "inaccessible_application", label: "Inaccessible online job application or automated screening process (e.g., did not work with assistive device or limited formats offered)" },
+        { value: "other", label: "Other", other: true },
+        { value: "none", label: "I have not experienced any other difficulties because of my condition", exclusive: true }
+      ]
+    },
+    {
+      id: "suggestions",
+      type: "textarea",
+      optional: true,
+      title: "Do you have any suggestions or feedback on how Jolly Farmer Transport can improve the accessibility of our organization?",
+      help: "Optional — share anything you think would help.",
+      placeholder: "Type your suggestions here (optional)…"
+    }
+  ];
+
+  var TOTAL = QUESTIONS.length;
+
+  /* ----- Tiny SVG icon helpers ----- */
+  var ICON_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>';
+  var ICON_DOT = '<span class="jft-dot"></span>';
+  var ICON_WARN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v5"/><path d="M12 16.5h.01"/></svg>';
+
+  /* ----- State ----- */
+  var state = load() || {};            // { questionId: { selected:[...], other:"" } | "yes" | "text" }
+  var current = -1;                    // -1 = intro screen
+
+  /* ----- Element refs ----- */
+  var form = document.getElementById("jft-form");
+  var body = document.getElementById("jft-body");
+  var footer = document.getElementById("jft-footer");
+  var progressWrap = document.getElementById("jft-progress-wrap");
+  var backBtn = document.getElementById("jft-back");
+  var nextBtn = document.getElementById("jft-next");
+  var submitBtn = document.getElementById("jft-submit");
+  var progressBar = document.getElementById("jft-progress-bar");
+  var progressRole = document.getElementById("jft-progress-role");
+  var stepLabel = document.getElementById("jft-step-label");
+  var percentEl = document.getElementById("jft-percent");
+
+  /* ============================================================
+     RENDER
+     ============================================================ */
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  function buildIntro() {
+    var el = document.createElement("div");
+    el.className = "jft-step is-active";
+    el.setAttribute("data-step", "intro");
+    el.innerHTML =
+      '<div class="jft-panel">' +
+        '<div class="jft-panel-icon">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>' +
+        '</div>' +
+        '<h2 tabindex="-1" class="jft-q-title" id="jft-intro-title">We\u2019d love your input</h2>' +
+        '<p>This short, confidential survey helps Jolly Farmer Transport identify and remove barriers so everyone can take part fully.</p>' +
+        '<ul class="jft-meta-list">' +
+          '<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span>Takes about 3\u20135 minutes \u2014 7 short questions.</span></li>' +
+          '<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span>Your answers are confidential.</span></li>' +
+          '<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg><span>You can go back and change any answer.</span></li>' +
+        '</ul>' +
+        '<div class="jft-panel-actions">' +
+          '<button type="button" class="jft-btn jft-btn-primary" id="jft-start">Start survey' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>' +
+          '</button>' +
+        '</div>' +
+      '</div>';
+    return el;
+  }
+
+  function buildQuestion(q, index) {
+    var el = document.createElement("section");
+    el.className = "jft-step";
+    el.setAttribute("data-step", index);
+    el.setAttribute("data-qid", q.id);
+
+    var titleId = "jft-q-" + q.id + "-title";
+    var html = "";
+    html += '<fieldset>';
+    html += '<legend>';
+    html += '<div class="jft-q-kicker">Question ' + (index + 1) + ' of ' + TOTAL + '</div>';
+    html += '<h2 class="jft-q-title" id="' + titleId + '" tabindex="-1">' + escapeHtml(q.title) + '</h2>';
+    if (q.help) html += '<p class="jft-q-help">' + escapeHtml(q.help) + '</p>';
+    html += '</legend>';
+
+    if (q.type === "textarea") {
+      var saved = typeof state[q.id] === "string" ? state[q.id] : "";
+      html += '<textarea class="jft-textarea" id="jft-ta-' + q.id + '" ' +
+              'aria-labelledby="' + titleId + '" ' +
+              'placeholder="' + escapeHtml(q.placeholder || "") + '">' + escapeHtml(saved) + '</textarea>';
+    } else {
+      html += '<div class="jft-options" role="' + (q.type === "radio" ? "radiogroup" : "group") + '" aria-labelledby="' + titleId + '">';
+      q.options.forEach(function (opt, i) {
+        var inputId = "jft-" + q.id + "-" + opt.value;
+        var inputType = q.type === "radio" ? "radio" : "checkbox";
+        var mark = q.type === "radio" ? ICON_DOT : ICON_CHECK;
+        html += '<label class="jft-option" data-type="' + inputType + '" for="' + inputId + '">';
+        html += '<input type="' + inputType + '" name="' + q.id + '" id="' + inputId + '" value="' + opt.value + '"' +
+                (opt.exclusive ? ' data-exclusive="true"' : '') +
+                (opt.other ? ' data-other="true"' : '') + ' />';
+        html += '<span class="jft-mark" aria-hidden="true">' + mark + '</span>';
+        html += '<span class="jft-option-text">' + escapeHtml(opt.label) + '</span>';
+        html += '</label>';
+        if (opt.other) {
+          html += '<div class="jft-other-wrap" id="jft-otherwrap-' + q.id + '">' +
+                    '<div class="jft-other-inner">' +
+                      '<input type="text" class="jft-other-input" id="jft-other-' + q.id + '" ' +
+                      'placeholder="Please specify\u2026" aria-label="Please specify other difficulties" />' +
+                    '</div>' +
+                  '</div>';
+        }
+      });
+      html += '</div>';
+    }
+
+    html += '<p class="jft-error" id="jft-error-' + q.id + '" role="alert">' + ICON_WARN + '<span>Please choose an answer to continue.</span></p>';
+    html += '</fieldset>';
+
+    el.innerHTML = html;
+    return el;
+  }
+
+  /* Build all steps once */
+  function init() {
+    body.appendChild(buildIntro());
+    QUESTIONS.forEach(function (q, i) {
+      body.appendChild(buildQuestion(q, i));
+    });
+
+    // restore saved selections into the DOM
+    QUESTIONS.forEach(function (q) {
+      var data = state[q.id];
+      if (!data) return;
+      if (q.type === "textarea") return; // handled at build time
+      if (q.type === "radio") {
+        var r = body.querySelector('input[name="' + q.id + '"][value="' + cssEscape(data) + '"]');
+        if (r) r.checked = true;
+      } else if (data && data.selected) {
+        data.selected.forEach(function (v) {
+          var c = body.querySelector('input[name="' + q.id + '"][value="' + cssEscape(v) + '"]');
+          if (c) c.checked = true;
+        });
+        if (data.other) {
+          var oi = document.getElementById("jft-other-" + q.id);
+          if (oi) oi.value = data.other;
+        }
+        syncOtherVisibility(q.id);
+      }
+    });
+
+    bindEvents();
+    document.getElementById("jft-start").addEventListener("click", function () { goTo(0); });
+  }
+
+  function cssEscape(v) { return String(v).replace(/["\\]/g, "\\$&"); }
+
+  /* ============================================================
+     NAVIGATION
+     ============================================================ */
+  function steps() { return body.querySelectorAll(".jft-step"); }
+
+  function goTo(index) {
+    // index: -1 intro, 0..TOTAL-1 questions
+    var all = steps();
+    all.forEach(function (s) { s.classList.remove("is-active"); });
+
+    var domIndex = index + 1; // intro occupies slot 0
+    var target = all[domIndex];
+    // restart entry animation
+    void target.offsetWidth;
+    target.classList.add("is-active");
+    current = index;
+
+    updateChrome();
+
+    // focus management
+    var heading = target.querySelector(".jft-q-title");
+    if (heading) {
+      heading.focus({ preventScroll: true });
+    }
+    // scroll the card into a comfortable position
+    try {
+      var top = document.getElementById("jft-survey").getBoundingClientRect().top + window.pageYOffset - 12;
+      if (window.pageYOffset > top || window.pageYOffset < top - 200) {
+        window.scrollTo({ top: Math.max(top, 0), behavior: "smooth" });
+      }
+    } catch (e) {}
+  }
+
+  function updateChrome() {
+    var isIntro = current < 0;
+    progressWrap.hidden = isIntro;
+    footer.hidden = isIntro;
+    if (isIntro) return;
+
+    var isLast = current === TOTAL - 1;
+    var pct = Math.round(((current) / TOTAL) * 100);
+    var pctComplete = Math.round(((current + 1) / TOTAL) * 100);
+
+    progressBar.style.width = pctComplete + "%";
+    progressRole.setAttribute("aria-valuenow", String(pctComplete));
+    percentEl.textContent = pctComplete + "%";
+    stepLabel.textContent = "Question " + (current + 1) + " of " + TOTAL;
+
+    backBtn.hidden = false;
+    nextBtn.hidden = isLast;
+    submitBtn.hidden = !isLast;
+  }
+
+  /* ============================================================
+     INTERACTIONS (exclusive options, "other" reveal)
+     ============================================================ */
+  function bindEvents() {
+    body.addEventListener("change", function (e) {
+      var input = e.target;
+      if (!input.name) return;
+      var qid = input.name;
+      var q = getQuestion(qid);
+      if (!q) return;
+
+      if (q.type === "checkbox") {
+        if (input.dataset.exclusive === "true" && input.checked) {
+          // uncheck everything else in this group
+          body.querySelectorAll('input[name="' + qid + '"]').forEach(function (other) {
+            if (other !== input) other.checked = false;
+          });
+          syncOtherVisibility(qid);
+        } else if (input.checked) {
+          // unchecking the exclusive "none" when another is picked
+          var excl = body.querySelector('input[name="' + qid + '"][data-exclusive="true"]');
+          if (excl) excl.checked = false;
+        }
+        if (input.dataset.other === "true") {
+          syncOtherVisibility(qid);
+        }
+      }
+      clearError(qid);
+      persistQuestion(qid);
+    });
+
+    body.addEventListener("input", function (e) {
+      var t = e.target;
+      if (t.classList.contains("jft-other-input")) {
+        var qid = t.id.replace("jft-other-", "");
+        persistQuestion(qid);
+      } else if (t.classList.contains("jft-textarea")) {
+        var tid = t.id.replace("jft-ta-", "");
+        state[tid] = t.value;
+        save();
+      }
+    });
+
+    backBtn.addEventListener("click", function () {
+      if (current <= 0) { goTo(-1); } else { goTo(current - 1); }
+    });
+    nextBtn.addEventListener("click", function () {
+      if (validate(current)) goTo(current + 1);
+    });
+
+    form.addEventListener("submit", onSubmit);
+  }
+
+  function syncOtherVisibility(qid) {
+    var wrap = document.getElementById("jft-otherwrap-" + qid);
+    if (!wrap) return;
+    var otherInput = body.querySelector('input[name="' + qid + '"][data-other="true"]');
+    var input = document.getElementById("jft-other-" + qid);
+    if (otherInput && otherInput.checked) {
+      wrap.classList.add("is-open");
+    } else {
+      wrap.classList.remove("is-open");
+      if (input) input.value = "";
+    }
+  }
+
+  function getQuestion(id) {
+    for (var i = 0; i < QUESTIONS.length; i++) if (QUESTIONS[i].id === id) return QUESTIONS[i];
+    return null;
+  }
+
+  /* ============================================================
+     VALIDATION & PERSISTENCE
+     ============================================================ */
+  function validate(index) {
+    var q = QUESTIONS[index];
+    if (!q || q.optional) return true;
+
+    var ok = false;
+    if (q.type === "textarea") {
+      ok = true; // textareas here are optional
+    } else {
+      var checked = body.querySelectorAll('input[name="' + q.id + '"]:checked');
+      ok = checked.length > 0;
+      // if "other" is chosen, require the specify text
+      var otherInput = body.querySelector('input[name="' + q.id + '"][data-other="true"]');
+      if (ok && otherInput && otherInput.checked) {
+        var spec = document.getElementById("jft-other-" + q.id);
+        if (spec && spec.value.trim() === "") {
+          showError(q.id, "Please describe the \u201cOther\u201d option, or unselect it.");
+          spec.focus();
+          return false;
+        }
+      }
+    }
+    if (!ok) showError(q.id, "Please choose an answer to continue.");
+    return ok;
+  }
+
+  function showError(qid, msg) {
+    var err = document.getElementById("jft-error-" + qid);
+    if (!err) return;
+    if (msg) err.querySelector("span").textContent = msg;
+    err.classList.add("is-shown");
+  }
+  function clearError(qid) {
+    var err = document.getElementById("jft-error-" + qid);
+    if (err) err.classList.remove("is-shown");
+  }
+
+  function persistQuestion(qid) {
+    var q = getQuestion(qid);
+    if (!q) return;
+    if (q.type === "radio") {
+      var sel = body.querySelector('input[name="' + qid + '"]:checked');
+      state[qid] = sel ? sel.value : null;
+    } else if (q.type === "checkbox") {
+      var selected = [];
+      body.querySelectorAll('input[name="' + qid + '"]:checked').forEach(function (c) { selected.push(c.value); });
+      var obj = { selected: selected };
+      var otherInput = document.getElementById("jft-other-" + qid);
+      if (otherInput) obj.other = otherInput.value.trim();
+      state[qid] = obj;
+    }
+    save();
+  }
+
+  function save() {
+    try { localStorage.setItem(JFT_STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+  }
+  function load() {
+    try { return JSON.parse(localStorage.getItem(JFT_STORAGE_KEY)); } catch (e) { return null; }
+  }
+
+  /* ============================================================
+     BUILD PAYLOAD + SUBMIT
+     ============================================================ */
+  function buildPayload() {
+    var answers = {};
+    QUESTIONS.forEach(function (q) {
+      var labels = {};
+      (q.options || []).forEach(function (o) { labels[o.value] = o.label; });
+      var data = state[q.id];
+      if (q.type === "textarea") {
+        answers[q.id] = { question: q.title, value: (typeof data === "string" ? data : "") };
+      } else if (q.type === "radio") {
+        answers[q.id] = { question: q.title, value: data || null, label: data ? labels[data] : null };
+      } else {
+        var sel = (data && data.selected) ? data.selected : [];
+        answers[q.id] = {
+          question: q.title,
+          selected: sel,
+          labels: sel.map(function (v) { return labels[v]; }),
+          other: (data && data.other) ? data.other : ""
+        };
+      }
+    });
+    return {
+      survey: "Jolly Farmer Transport Accessibility Survey",
+      submitted_at: new Date().toISOString(),
+      answers: answers
+    };
+  }
+
+  function onSubmit(e) {
+    e.preventDefault();
+    if (!validate(current)) return;
+
+    var payload = buildPayload();
+    submitBtn.disabled = true;
+    submitBtn.querySelector("svg") && (submitBtn.firstChild.nodeValue = "Submitting… ");
+
+    if (!JFT_ENDPOINT) {
+      // Demo mode — no backend configured yet.
+      console.log("[JFT Survey] Submission payload (demo mode):", payload);
+      setTimeout(function () { showSuccess(); }, 500);
+      return;
+    }
+
+    fetch(JFT_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    })
+      .then(function (res) {
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        showSuccess();
+      })
+      .catch(function (err) {
+        console.error("[JFT Survey] Submission failed:", err);
+        submitBtn.disabled = false;
+        showError(QUESTIONS[current].id, "Something went wrong sending your response. Please try again.");
+      });
+  }
+
+  function showSuccess() {
+    try { localStorage.removeItem(JFT_STORAGE_KEY); } catch (e) {}
+    progressBar.style.width = "100%";
+    progressRole.setAttribute("aria-valuenow", "100");
+    percentEl.textContent = "100%";
+    footer.hidden = true;
+    progressWrap.hidden = true;
+
+    body.innerHTML =
+      '<div class="jft-panel">' +
+        '<div class="jft-success-anim">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>' +
+        '</div>' +
+        '<h2 tabindex="-1" class="jft-q-title" id="jft-done">Thank you!</h2>' +
+        '<p>Your responses have been recorded. We genuinely appreciate you taking the time \u2014 your feedback helps us make Jolly Farmer Transport more accessible for everyone.</p>' +
+      '</div>';
+    var done = document.getElementById("jft-done");
+    if (done) done.focus({ preventScroll: true });
+  }
+
+  /* ----- boot ----- */
+  init();
+})();
+</script>
+</body>
+</html>
