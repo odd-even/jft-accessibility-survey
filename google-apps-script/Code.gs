@@ -101,6 +101,9 @@ function formatAnswer_(a) {
   // Multi-choice (checkbox)
   if (a.selected !== undefined) {
     var parts = (a.labels || []).filter(function (l) { return l && l !== 'Other'; });
+    if (parts.length === 0 && a.selected.length > 0) {
+      parts = a.selected.slice();
+    }
     if (a.other) parts.push('Other: ' + a.other);
     return parts.join('\n');
   }

@@ -692,6 +692,9 @@
 
   function goTo(index) {
     // index: -1 intro, 0..TOTAL-1 questions
+    if (current >= 0 && current < TOTAL) {
+      persistQuestion(QUESTIONS[current].id);
+    }
     var all = steps();
     all.forEach(function (s) { s.classList.remove("is-active"); });
 
@@ -848,21 +851,42 @@
     if (err) err.classList.remove("is-shown");
   }
 
+  function readAnswerFromDom(q) {
+    if (q.type === "textarea") {
+      var ta = document.getElementById("jft-ta-" + q.id);
+      return ta ? ta.value : "";
+    }
+    if (q.type === "radio") {
+      var sel = body.querySelector('input[name="' + q.id + '"]:checked');
+      return sel ? sel.value : null;
+    }
+    var selected = [];
+    body.querySelectorAll('input[name="' + q.id + '"]:checked').forEach(function (c) {
+      selected.push(c.value);
+    });
+    var otherInput = document.getElementById("jft-other-" + q.id);
+    return {
+      selected: selected,
+      other: otherInput ? otherInput.value.trim() : ""
+    };
+  }
+
   function persistQuestion(qid) {
     var q = getQuestion(qid);
     if (!q) return;
+    var data = readAnswerFromDom(q);
     if (q.type === "radio") {
-      var sel = body.querySelector('input[name="' + qid + '"]:checked');
-      state[qid] = sel ? sel.value : null;
+      state[qid] = data;
     } else if (q.type === "checkbox") {
-      var selected = [];
-      body.querySelectorAll('input[name="' + qid + '"]:checked').forEach(function (c) { selected.push(c.value); });
-      var obj = { selected: selected };
-      var otherInput = document.getElementById("jft-other-" + qid);
-      if (otherInput) obj.other = otherInput.value.trim();
-      state[qid] = obj;
+      state[qid] = data;
+    } else if (q.type === "textarea") {
+      state[qid] = data;
     }
     save();
+  }
+
+  function syncAllFromDom() {
+    QUESTIONS.forEach(function (q) { persistQuestion(q.id); });
   }
 
   function save() {
@@ -876,22 +900,23 @@
      BUILD PAYLOAD + SUBMIT
      ============================================================ */
   function buildPayload() {
+    syncAllFromDom();
     var answers = {};
     QUESTIONS.forEach(function (q) {
       var labels = {};
       (q.options || []).forEach(function (o) { labels[o.value] = o.label; });
-      var data = state[q.id];
+      var data = readAnswerFromDom(q);
       if (q.type === "textarea") {
-        answers[q.id] = { question: q.title, value: (typeof data === "string" ? data : "") };
+        answers[q.id] = { question: q.title, value: data || "" };
       } else if (q.type === "radio") {
         answers[q.id] = { question: q.title, value: data || null, label: data ? labels[data] : null };
       } else {
-        var sel = (data && data.selected) ? data.selected : [];
+        var sel = data.selected || [];
         answers[q.id] = {
           question: q.title,
           selected: sel,
           labels: sel.map(function (v) { return labels[v]; }),
-          other: (data && data.other) ? data.other : ""
+          other: data.other || ""
         };
       }
     });
