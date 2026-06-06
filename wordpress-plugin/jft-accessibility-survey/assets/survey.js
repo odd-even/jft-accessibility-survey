@@ -1,444 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Jolly Farmer Transport — Accessibility Survey</title>
-<meta name="description" content="Help us improve accessibility at Jolly Farmer Transport. This short, confidential survey takes a few minutes." />
-<style>
-  /* ============================================================
-     Jolly Farmer Transport — Accessibility Survey
-     Self-contained: all CSS + JS live in this single file so it
-     can be pasted into a WordPress "Custom HTML" block or saved
-     as a standalone page. Scoped under #jft-survey to avoid
-     clashing with theme styles.
-     ============================================================ */
-  #jft-survey {
-    --jft-bg: #ffffff;
-    --jft-card: #ffffff;
-    --jft-ink: #1a1a1a;
-    --jft-muted: #71717a;
-    --jft-line: #e4e4e7;
-    --jft-primary: #3f3f46;
-    --jft-primary-dark: #27272a;
-    --jft-soft: #f4f4f5;
-    --jft-accent: #d99a2b;
-    --jft-danger: #b3261e;
-    --jft-focus: #a1a1aa;
-    --jft-radius: 16px;
-    --jft-shadow: 0 4px 16px rgba(0, 0, 0, 0.02), 0 16px 48px rgba(0, 0, 0, 0.03), 0 32px 96px rgba(0, 0, 0, 0.04);
-    --jft-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
-    --jft-shadow-md: 0 6px 20px rgba(0, 0, 0, 0.08);
-    --jft-shadow-lg: 0 8px 28px rgba(0, 0, 0, 0.10);
-    --jft-ease: cubic-bezier(0.22, 1, 0.36, 1);
-
-    box-sizing: border-box;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    color: var(--jft-ink);
-    line-height: 1.55;
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
-
-    min-height: 100%;
-    background: #ffffff;
-    padding: clamp(16px, 4vw, 48px) clamp(12px, 4vw, 32px);
-    display: flex;
-    justify-content: center;
-  }
-  #jft-survey *,
-  #jft-survey *::before,
-  #jft-survey *::after { box-sizing: border-box; }
-  #jft-survey [hidden] { display: none !important; }
-
-  #jft-survey .jft-shell {
-    width: 100%;
-    max-width: 720px;
-  }
-
-  /* ---------- Header ---------- */
-  #jft-survey .jft-header {
-    text-align: center;
-    margin-bottom: clamp(24px, 5vw, 36px);
-  }
-  #jft-survey .jft-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: #fff;
-    color: var(--jft-ink);
-    font-weight: 600;
-    font-size: 0.8rem;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    padding: 8px 16px;
-    border-radius: 999px;
-    margin-bottom: 16px;
-    border: 1px solid var(--jft-line);
-  }
-  #jft-survey .jft-badge svg { width: 16px; height: 16px; }
-  #jft-survey .jft-title {
-    font-size: clamp(1.4rem, 3.5vw, 2rem);
-    font-weight: 300;
-    margin: 0;
-    letter-spacing: -0.01em;
-    line-height: 1.2;
-    margin-top: 4px;
-  }
-  /* ---------- Card ---------- */
-  #jft-survey .jft-card {
-    background: var(--jft-card);
-    border-radius: var(--jft-radius);
-    box-shadow: var(--jft-shadow);
-    border: 1px solid var(--jft-line);
-    overflow: hidden;
-  }
-
-  /* ---------- Progress ---------- */
-  #jft-survey .jft-progress-wrap {
-    padding: clamp(22px, 4vw, 32px) clamp(22px, 4vw, 38px) clamp(8px, 2vw, 12px);
-  }
-  #jft-survey .jft-progress-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    font-size: 0.85rem;
-    color: var(--jft-muted);
-    margin-bottom: 12px;
-  }
-  #jft-survey .jft-progress-meta strong { color: var(--jft-ink); font-weight: 700; }
-  #jft-survey .jft-progress-track {
-    height: 8px;
-    background: var(--jft-soft);
-    border-radius: 999px;
-    overflow: hidden;
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
-  }
-  #jft-survey .jft-progress-bar {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, var(--jft-primary), #71717a);
-    border-radius: 999px;
-    transition: width 0.5s var(--jft-ease);
-  }
-
-  /* ---------- Body / steps ---------- */
-  #jft-survey .jft-body {
-    padding: clamp(24px, 4vw, 40px) clamp(22px, 4vw, 38px) clamp(28px, 4vw, 40px);
-    position: relative;
-  }
-  #jft-survey .jft-step { display: none; }
-  #jft-survey .jft-step.is-active {
-    display: block;
-    animation: jft-page-in 0.5s var(--jft-ease) both;
-  }
-  @keyframes jft-page-in {
-    from { opacity: 0; transform: translateY(14px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  #jft-survey .jft-q-title {
-    font-size: clamp(1.15rem, 2.6vw, 1.4rem);
-    font-weight: 700;
-    line-height: 1.3;
-    margin: 0 0 12px;
-    outline: none;
-    text-wrap: balance;
-  }
-  #jft-survey .jft-q-help {
-    color: var(--jft-muted);
-    font-size: 0.95rem;
-    line-height: 1.45;
-    margin: 0 0 28px;
-    text-wrap: pretty;
-  }
-
-  /* ---------- Options ---------- */
-  #jft-survey fieldset { border: 0; margin: 0; padding: 0; }
-  #jft-survey legend { padding: 0; width: 100%; margin-bottom: 4px; }
-  #jft-survey .jft-options { display: grid; gap: 14px; }
-
-  #jft-survey .jft-option {
-    position: relative;
-    display: flex;
-    align-items: flex-start;
-    gap: 16px;
-    padding: 16px 18px;
-    border: 1.5px solid var(--jft-line);
-    border-radius: 12px;
-    cursor: pointer;
-    background: #fff;
-    transition: border-color 0.18s ease, background 0.18s ease, transform 0.06s ease;
-  }
-  #jft-survey .jft-option:hover { border-color: var(--jft-focus); background: #fff; }
-  #jft-survey .jft-option:active { transform: scale(0.995); }
-  #jft-survey .jft-option input {
-    position: absolute;
-    opacity: 0;
-    width: 1px; height: 1px;
-    margin: 0;
-  }
-  #jft-survey .jft-mark {
-    flex: 0 0 auto;
-    width: 24px; height: 24px;
-    margin-top: 1px;
-    border: 2px solid #d4d4d8;
-    background: #fff;
-    display: grid;
-    place-items: center;
-    transition: border-color 0.18s ease, background 0.18s ease;
-  }
-  #jft-survey .jft-option[data-type="checkbox"] .jft-mark { border-radius: 7px; }
-  #jft-survey .jft-option[data-type="radio"] .jft-mark { border-radius: 50%; }
-  #jft-survey .jft-mark svg { width: 15px; height: 15px; opacity: 0; transform: scale(0.6); transition: opacity 0.15s ease, transform 0.15s var(--jft-ease); color: #fff; }
-  #jft-survey .jft-mark .jft-dot { width: 10px; height: 10px; border-radius: 50%; background: #fff; opacity: 0; transform: scale(0.4); transition: opacity 0.15s ease, transform 0.15s var(--jft-ease); }
-
-  #jft-survey .jft-option-text { font-size: 1rem; line-height: 1.45; padding-top: 2px; }
-
-  /* checked states */
-  #jft-survey .jft-option:has(input:checked) {
-    border-color: var(--jft-primary);
-    background: #fff;
-  }
-  #jft-survey .jft-option:has(input:checked) .jft-mark {
-    border-color: var(--jft-primary);
-    background: var(--jft-primary);
-  }
-  #jft-survey .jft-option:has(input:checked) .jft-mark svg,
-  #jft-survey .jft-option:has(input:checked) .jft-mark .jft-dot { opacity: 1; transform: scale(1); }
-
-  /* keyboard focus */
-  #jft-survey .jft-option:has(input:focus-visible) {
-    outline: 3px solid rgba(63, 63, 70, 0.35);
-    outline-offset: 2px;
-  }
-
-  /* ---------- "Other — specify" reveal ---------- */
-  #jft-survey .jft-other-wrap {
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows 0.35s var(--jft-ease);
-  }
-  #jft-survey .jft-other-wrap.is-open { grid-template-rows: 1fr; }
-  #jft-survey .jft-other-inner { overflow: hidden; }
-  #jft-survey .jft-other-wrap.is-open .jft-other-inner { padding-top: 4px; padding-bottom: 4px; }
-  #jft-survey .jft-other-input,
-  #jft-survey .jft-textarea {
-    width: 100%;
-    font: inherit;
-    color: var(--jft-ink);
-    padding: 14px 16px;
-    border: 1.5px solid var(--jft-line);
-    border-radius: 10px;
-    background: #fff;
-    resize: vertical;
-    transition: border-color 0.18s ease, box-shadow 0.18s ease;
-  }
-  #jft-survey .jft-textarea { min-height: 140px; margin-top: 4px; }
-  #jft-survey .jft-other-input:focus,
-  #jft-survey .jft-textarea:focus {
-    outline: none;
-    border-color: var(--jft-primary);
-    box-shadow: 0 0 0 3px rgba(63, 63, 70, 0.12);
-  }
-
-  /* ---------- Error ---------- */
-  #jft-survey .jft-error {
-    display: none;
-    align-items: center;
-    gap: 8px;
-    color: var(--jft-danger);
-    font-size: 0.9rem;
-    font-weight: 600;
-    margin-top: 20px;
-  }
-  #jft-survey .jft-error.is-shown { display: flex; }
-  #jft-survey .jft-error svg { width: 18px; height: 18px; flex: 0 0 auto; }
-
-  /* ---------- Footer / nav ---------- */
-  #jft-survey .jft-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    padding: clamp(20px, 4vw, 28px) clamp(22px, 4vw, 38px);
-    border-top: 1px solid var(--jft-line);
-    background: #fff;
-  }
-  #jft-survey .jft-btn {
-    appearance: none;
-    font: inherit;
-    font-weight: 700;
-    border-radius: 11px;
-    padding: 13px 24px;
-    cursor: pointer;
-    border: 1.5px solid transparent;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: transform 0.06s ease, background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
-  }
-  #jft-survey .jft-btn:active { transform: translateY(1px); }
-  #jft-survey .jft-btn:focus-visible { outline: 3px solid rgba(63, 63, 70, 0.35); outline-offset: 2px; }
-  #jft-survey .jft-btn svg { width: 18px; height: 18px; }
-  #jft-survey .jft-btn-primary {
-    background: #fff;
-    color: var(--jft-ink);
-    border-color: var(--jft-line);
-  }
-  #jft-survey .jft-btn-primary:hover { background: #fff; border-color: var(--jft-focus); }
-  #jft-survey .jft-btn-ghost {
-    background: transparent;
-    color: var(--jft-muted);
-    border-color: var(--jft-line);
-  }
-  #jft-survey .jft-btn-ghost:hover { color: var(--jft-ink); border-color: var(--jft-primary); background: #fff; }
-  #jft-survey .jft-btn[hidden] { display: none; }
-  #jft-survey .jft-btn:disabled { opacity: 0.6; cursor: progress; }
-
-  /* ---------- Intro & success panels ---------- */
-  #jft-survey .jft-panel { text-align: center; padding: clamp(12px, 3vw, 24px) 0; }
-  #jft-survey .jft-panel-icon {
-    width: 68px; height: 68px;
-    margin: 0 auto 24px;
-    border-radius: 50%;
-    background: #fff;
-    color: var(--jft-ink);
-    border: 1px solid var(--jft-line);
-    display: grid; place-items: center;
-  }
-  #jft-survey .jft-panel-icon svg { width: 34px; height: 34px; }
-  #jft-survey .jft-panel h2 { font-size: clamp(1.3rem, 3vw, 1.7rem); margin: 0 0 14px; line-height: 1.25; }
-  #jft-survey .jft-panel p { color: var(--jft-muted); max-width: 46ch; margin: 0 auto 16px; line-height: 1.5; }
-  #jft-survey .jft-meta-list {
-    list-style: none;
-    padding: 0;
-    margin: 28px auto 8px;
-    max-width: 420px;
-    display: grid;
-    gap: 14px;
-    text-align: left;
-  }
-  #jft-survey .jft-meta-list li {
-    display: flex; gap: 12px; align-items: flex-start;
-    font-size: 0.95rem; color: var(--jft-ink);
-    line-height: 1.45;
-  }
-  #jft-survey .jft-meta-list svg { width: 20px; height: 20px; color: var(--jft-muted); flex: 0 0 auto; margin-top: 2px; }
-  #jft-survey .jft-panel-actions { margin-top: 32px; display: flex; justify-content: center; }
-
-  #jft-survey .jft-success-anim {
-    width: 84px; height: 84px; margin: 0 auto 24px;
-    border-radius: 50%;
-    background: #fff;
-    border: 1px solid var(--jft-line);
-    box-shadow: var(--jft-shadow-lg);
-    display: grid; place-items: center;
-    animation: jft-pop 0.5s var(--jft-ease) both;
-  }
-  #jft-survey .jft-success-anim svg { width: 44px; height: 44px; color: var(--jft-primary); }
-  @keyframes jft-pop { 0% { transform: scale(0.4); opacity: 0; } 60% { transform: scale(1.08); } 100% { transform: scale(1); opacity: 1; } }
-
-  #jft-survey .jft-footnote {
-    text-align: center;
-    color: var(--jft-muted);
-    font-size: 0.8rem;
-    line-height: 1.5;
-    margin-top: clamp(20px, 4vw, 28px);
-    padding: 0 8px;
-  }
-
-  /* visually hidden but available to screen readers */
-  #jft-survey .jft-sr-only {
-    position: absolute !important;
-    width: 1px; height: 1px;
-    padding: 0; margin: -1px;
-    overflow: hidden; clip: rect(0,0,0,0);
-    white-space: nowrap; border: 0;
-  }
-
-  @media (max-width: 480px) {
-    #jft-survey .jft-footer { flex-direction: row; }
-    #jft-survey .jft-btn { padding: 12px 18px; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    #jft-survey *,
-    #jft-survey *::before,
-    #jft-survey *::after {
-      animation-duration: 0.001ms !important;
-      transition-duration: 0.001ms !important;
-    }
-  }
-</style>
-</head>
-<body>
-  <div id="jft-survey">
-    <div class="jft-shell">
-      <header class="jft-header">
-        <span class="jft-badge">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 17h4"/><path d="M3 17h2"/><path d="M15 17h2"/><path d="M13 17V6H4v11"/><path d="M13 9h4l3 5v3h-2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>
-          Jolly Farmer Transport
-        </span>
-        <h1 class="jft-title">Accessibility Survey</h1>
-      </header>
-
-      <form id="jft-form" class="jft-card" novalidate>
-        <div class="jft-progress-wrap" id="jft-progress-wrap" hidden>
-          <div class="jft-progress-meta">
-            <span id="jft-step-label" aria-live="polite">Question 1 of 7</span>
-            <span><strong id="jft-percent">0%</strong> complete</span>
-          </div>
-          <div class="jft-progress-track" role="progressbar" aria-label="Survey progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="jft-progress-role">
-            <div class="jft-progress-bar" id="jft-progress-bar"></div>
-          </div>
-        </div>
-
-        <div class="jft-body" id="jft-body">
-          <!-- Steps are injected here by JavaScript -->
-        </div>
-
-        <div class="jft-footer" id="jft-footer" hidden>
-          <button type="button" class="jft-btn jft-btn-ghost" id="jft-back">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
-            Back
-          </button>
-          <button type="button" class="jft-btn jft-btn-primary" id="jft-next">
-            Next
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
-          </button>
-          <button type="submit" class="jft-btn jft-btn-primary" id="jft-submit" hidden>
-            Submit survey
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>
-          </button>
-        </div>
-      </form>
-
-      <p class="jft-footnote">Your responses are confidential and help us improve accessibility for everyone.</p>
-    </div>
-  </div>
-
-<script>
 (function () {
   "use strict";
 
-  /* ============================================================
-     CONFIGURATION
-     ------------------------------------------------------------
-     Responses are sent to a Google Apps Script Web App, which
-     appends each submission as a row in a Google Sheet.
-
-     1. Create a Google Sheet.
-     2. Extensions > Apps Script, paste in google-apps-script/Code.gs
-        from this repo, then Deploy > New deployment > Web app
-        (Execute as: Me, Who has access: Anyone).
-     3. Copy the Web app URL and paste it below.
-
-     See GOOGLE-SHEETS-SETUP.md for step-by-step instructions.
-     Leave JFT_ENDPOINT empty ("") to run in demo mode (logs the
-     payload to the console and shows the success screen).
-     ============================================================ */
-  var JFT_ENDPOINT = "https://script.google.com/macros/s/AKfycbzw6qBm-htmSLdl_gSmT-J5imR6dgLGiTeCbzphxPF3WHVmyHmOsJhjjVJLogYjUQow/exec";
-  var JFT_STORAGE_KEY = "jft-accessibility-survey-v1";
+  var cfg = window.jftSurveyConfig || {};
+  var JFT_ENDPOINT = cfg.endpoint || "";
+  var JFT_STORAGE_KEY = cfg.storageKey || "jft-accessibility-survey-v1";
 
   /* ----- Survey content (data-driven) ----- */
   var QUESTIONS = [
@@ -554,25 +119,13 @@
   var ICON_WARN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v5"/><path d="M12 16.5h.01"/></svg>';
 
   /* ----- State ----- */
-  var state = load() || {};            // { questionId: { selected:[...], other:"" } | "yes" | "text" }
-  var current = -1;                    // -1 = intro screen
+  var state = load() || {};
+  var current = -1;
 
-  /* ----- Element refs ----- */
-  var form = document.getElementById("jft-form");
-  var body = document.getElementById("jft-body");
-  var footer = document.getElementById("jft-footer");
-  var progressWrap = document.getElementById("jft-progress-wrap");
-  var backBtn = document.getElementById("jft-back");
-  var nextBtn = document.getElementById("jft-next");
-  var submitBtn = document.getElementById("jft-submit");
-  var progressBar = document.getElementById("jft-progress-bar");
-  var progressRole = document.getElementById("jft-progress-role");
-  var stepLabel = document.getElementById("jft-step-label");
-  var percentEl = document.getElementById("jft-percent");
+  /* ----- Element refs (set in boot) ----- */
+  var form, body, footer, progressWrap, backBtn, nextBtn, submitBtn;
+  var progressBar, progressRole, stepLabel, percentEl;
 
-  /* ============================================================
-     RENDER
-     ============================================================ */
   function escapeHtml(s) {
     return String(s).replace(/[&<>"']/g, function (c) {
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
@@ -625,7 +178,7 @@
               'placeholder="' + escapeHtml(q.placeholder || "") + '">' + escapeHtml(saved) + '</textarea>';
     } else {
       html += '<div class="jft-options" role="' + (q.type === "radio" ? "radiogroup" : "group") + '" aria-labelledby="' + titleId + '">';
-      q.options.forEach(function (opt, i) {
+      q.options.forEach(function (opt) {
         var inputId = "jft-" + q.id + "-" + opt.value;
         var inputType = q.type === "radio" ? "radio" : "checkbox";
         var mark = q.type === "radio" ? ICON_DOT : ICON_CHECK;
@@ -655,18 +208,30 @@
     return el;
   }
 
-  /* Build all steps once */
   function init() {
+    form = document.getElementById("jft-form");
+    body = document.getElementById("jft-body");
+    footer = document.getElementById("jft-footer");
+    progressWrap = document.getElementById("jft-progress-wrap");
+    backBtn = document.getElementById("jft-back");
+    nextBtn = document.getElementById("jft-next");
+    submitBtn = document.getElementById("jft-submit");
+    progressBar = document.getElementById("jft-progress-bar");
+    progressRole = document.getElementById("jft-progress-role");
+    stepLabel = document.getElementById("jft-step-label");
+    percentEl = document.getElementById("jft-percent");
+
+    if (!form || !body) return;
+
     body.appendChild(buildIntro());
     QUESTIONS.forEach(function (q, i) {
       body.appendChild(buildQuestion(q, i));
     });
 
-    // restore saved selections into the DOM
     QUESTIONS.forEach(function (q) {
       var data = state[q.id];
       if (!data) return;
-      if (q.type === "textarea") return; // handled at build time
+      if (q.type === "textarea") return;
       if (q.type === "radio") {
         var r = body.querySelector('input[name="' + q.id + '"][value="' + cssEscape(data) + '"]');
         if (r) r.checked = true;
@@ -689,36 +254,29 @@
 
   function cssEscape(v) { return String(v).replace(/["\\]/g, "\\$&"); }
 
-  /* ============================================================
-     NAVIGATION
-     ============================================================ */
   function steps() { return body.querySelectorAll(".jft-step"); }
 
   function goTo(index) {
-    // index: -1 intro, 0..TOTAL-1 questions
     if (current >= 0 && current < TOTAL) {
       persistQuestion(QUESTIONS[current].id);
     }
     var all = steps();
     all.forEach(function (s) { s.classList.remove("is-active"); });
 
-    var domIndex = index + 1; // intro occupies slot 0
+    var domIndex = index + 1;
     var target = all[domIndex];
-    // restart entry animation
     void target.offsetWidth;
     target.classList.add("is-active");
     current = index;
 
     updateChrome();
 
-    // focus management
     var heading = target.querySelector(".jft-q-title");
-    if (heading) {
-      heading.focus({ preventScroll: true });
-    }
-    // scroll the card into a comfortable position
+    if (heading) heading.focus({ preventScroll: true });
+
     try {
-      var top = document.getElementById("jft-survey").getBoundingClientRect().top + window.pageYOffset - 12;
+      var root = document.getElementById("jft-survey");
+      var top = root.getBoundingClientRect().top + window.pageYOffset - 12;
       if (window.pageYOffset > top || window.pageYOffset < top - 200) {
         window.scrollTo({ top: Math.max(top, 0), behavior: "smooth" });
       }
@@ -732,7 +290,6 @@
     if (isIntro) return;
 
     var isLast = current === TOTAL - 1;
-    var pct = Math.round(((current) / TOTAL) * 100);
     var pctComplete = Math.round(((current + 1) / TOTAL) * 100);
 
     progressBar.style.width = pctComplete + "%";
@@ -745,9 +302,6 @@
     submitBtn.hidden = !isLast;
   }
 
-  /* ============================================================
-     INTERACTIONS (exclusive options, "other" reveal)
-     ============================================================ */
   function bindEvents() {
     body.addEventListener("change", function (e) {
       var input = e.target;
@@ -758,13 +312,11 @@
 
       if (q.type === "checkbox") {
         if (input.dataset.exclusive === "true" && input.checked) {
-          // uncheck everything else in this group
           body.querySelectorAll('input[name="' + qid + '"]').forEach(function (other) {
             if (other !== input) other.checked = false;
           });
           syncOtherVisibility(qid);
         } else if (input.checked) {
-          // unchecking the exclusive "none" when another is picked
           var excl = body.querySelector('input[name="' + qid + '"][data-exclusive="true"]');
           if (excl) excl.checked = false;
         }
@@ -779,11 +331,9 @@
     body.addEventListener("input", function (e) {
       var t = e.target;
       if (t.classList.contains("jft-other-input")) {
-        var qid = t.id.replace("jft-other-", "");
-        persistQuestion(qid);
+        persistQuestion(t.id.replace("jft-other-", ""));
       } else if (t.classList.contains("jft-textarea")) {
-        var tid = t.id.replace("jft-ta-", "");
-        state[tid] = t.value;
+        state[t.id.replace("jft-ta-", "")] = t.value;
         save();
       }
     });
@@ -816,20 +366,16 @@
     return null;
   }
 
-  /* ============================================================
-     VALIDATION & PERSISTENCE
-     ============================================================ */
   function validate(index) {
     var q = QUESTIONS[index];
     if (!q || q.optional) return true;
 
     var ok = false;
     if (q.type === "textarea") {
-      ok = true; // textareas here are optional
+      ok = true;
     } else {
       var checked = body.querySelectorAll('input[name="' + q.id + '"]:checked');
       ok = checked.length > 0;
-      // if "other" is chosen, require the specify text
       var otherInput = body.querySelector('input[name="' + q.id + '"][data-other="true"]');
       if (ok && otherInput && otherInput.checked) {
         var spec = document.getElementById("jft-other-" + q.id);
@@ -850,6 +396,7 @@
     if (msg) err.querySelector("span").textContent = msg;
     err.classList.add("is-shown");
   }
+
   function clearError(qid) {
     var err = document.getElementById("jft-error-" + qid);
     if (err) err.classList.remove("is-shown");
@@ -878,14 +425,7 @@
   function persistQuestion(qid) {
     var q = getQuestion(qid);
     if (!q) return;
-    var data = readAnswerFromDom(q);
-    if (q.type === "radio") {
-      state[qid] = data;
-    } else if (q.type === "checkbox") {
-      state[qid] = data;
-    } else if (q.type === "textarea") {
-      state[qid] = data;
-    }
+    state[qid] = readAnswerFromDom(q);
     save();
   }
 
@@ -896,13 +436,11 @@
   function save() {
     try { localStorage.setItem(JFT_STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
   }
+
   function load() {
     try { return JSON.parse(localStorage.getItem(JFT_STORAGE_KEY)); } catch (e) { return null; }
   }
 
-  /* ============================================================
-     BUILD PAYLOAD + SUBMIT
-     ============================================================ */
   function buildPayload() {
     syncAllFromDom();
     var answers = {};
@@ -937,28 +475,50 @@
 
     var payload = buildPayload();
     submitBtn.disabled = true;
-    submitBtn.querySelector("svg") && (submitBtn.firstChild.nodeValue = "Submitting… ");
+    submitBtn.querySelector("svg") && (submitBtn.firstChild.nodeValue = "Submitting\u2026 ");
+
+    if (cfg.restUrl) {
+      fetch(cfg.restUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-WP-Nonce": cfg.nonce || ""
+        },
+        body: JSON.stringify(payload)
+      })
+        .then(function (res) {
+          return res.json().then(function (data) {
+            if (!res.ok || !data || !data.success) {
+              var msg = (data && data.message) ? data.message : "Submission failed.";
+              throw new Error(msg);
+            }
+            if (data.demo_mode) {
+              console.log("[JFT Survey] Demo mode — configure Google Sheets or email in Settings \u2192 JFT Survey.", payload);
+            }
+            showSuccess();
+          });
+        })
+        .catch(function (err) {
+          console.error("[JFT Survey] Submission failed:", err);
+          submitBtn.disabled = false;
+          showError(QUESTIONS[current].id, err.message || "Something went wrong sending your response. Please check your connection and try again.");
+        });
+      return;
+    }
 
     if (!JFT_ENDPOINT) {
-      // Demo mode — no backend configured yet.
       console.log("[JFT Survey] Submission payload (demo mode):", payload);
       setTimeout(function () { showSuccess(); }, 500);
       return;
     }
 
-    // Google Apps Script Web Apps don't send CORS headers, so we POST in
-    // "no-cors" mode with a text/plain body (which avoids a CORS preflight).
-    // The response is opaque — we can't read it — so a resolved request is
-    // treated as success (fire-and-forget). Network failures still reject.
     fetch(JFT_ENDPOINT, {
       method: "POST",
       mode: "no-cors",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify(payload)
     })
-      .then(function () {
-        showSuccess();
-      })
+      .then(function () { showSuccess(); })
       .catch(function (err) {
         console.error("[JFT Survey] Submission failed:", err);
         submitBtn.disabled = false;
@@ -986,9 +546,9 @@
     if (done) done.focus({ preventScroll: true });
   }
 
-  /* ----- boot ----- */
-  init();
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
 })();
-</script>
-</body>
-</html>
