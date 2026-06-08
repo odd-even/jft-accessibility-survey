@@ -469,6 +469,44 @@
     };
   }
 
+  function resetSubmitButton() {
+    submitBtn.disabled = false;
+    if (submitBtn.firstChild && submitBtn.firstChild.nodeType === 3) {
+      submitBtn.firstChild.nodeValue = "Submit survey ";
+    }
+  }
+
+  function parseRestResponse(res) {
+    return res.text().then(function (text) {
+      var data = null;
+      if (text) {
+        try {
+          data = JSON.parse(text);
+        } catch (e) {
+          console.error("[JFT Survey] Non-JSON response from WordPress:", text.slice(0, 500));
+          throw new Error(
+            "The server returned an unexpected response. This usually means the WordPress REST API is blocked or misconfigured. " +
+            "Try saving Settings \u2192 Permalinks, then check that " + (cfg.restUrl || "the REST endpoint") + " is reachable."
+          );
+        }
+      }
+      return { res: res, data: data };
+    });
+  }
+
+  function getRestErrorMessage(res, data) {
+    if (data && typeof data.message === "string" && data.message) {
+      return data.message;
+    }
+    if (res.status === 403) {
+      return "Your session expired. Please refresh the page and try again.";
+    }
+    if (res.status === 404) {
+      return "The survey submit endpoint was not found. Try deactivating and reactivating the plugin, then save Settings \u2192 Permalinks.";
+    }
+    return "Submission failed (HTTP " + res.status + "). Please try again.";
+  }
+
   function onSubmit(e) {
     e.preventDefault();
     if (!validate(current)) return;
@@ -480,28 +518,33 @@
     if (cfg.restUrl) {
       fetch(cfg.restUrl, {
         method: "POST",
+        credentials: "same-origin",
         headers: {
+          "Accept": "application/json",
           "Content-Type": "application/json",
           "X-WP-Nonce": cfg.nonce || ""
         },
         body: JSON.stringify(payload)
       })
-        .then(function (res) {
-          return res.json().then(function (data) {
-            if (!res.ok || !data || !data.success) {
-              var msg = (data && data.message) ? data.message : "Submission failed.";
-              throw new Error(msg);
-            }
-            if (data.demo_mode) {
-              console.log("[JFT Survey] Demo mode — configure Google Sheets or email in Settings \u2192 JFT Survey.", payload);
-            }
-            showSuccess();
-          });
+        .then(parseRestResponse)
+        .then(function (result) {
+          var res = result.res;
+          var data = result.data;
+          if (!res.ok || !data || data.success !== true) {
+            throw new Error(getRestErrorMessage(res, data));
+          }
+          if (data.demo_mode) {
+            console.log("[JFT Survey] Demo mode — configure Google Sheets or email in Settings \u2192 JFT Survey.", payload);
+          }
+          showSuccess();
         })
         .catch(function (err) {
           console.error("[JFT Survey] Submission failed:", err);
-          submitBtn.disabled = false;
-          showError(QUESTIONS[current].id, err.message || "Something went wrong sending your response. Please check your connection and try again.");
+          resetSubmitButton();
+          showError(
+            QUESTIONS[current].id,
+            err.message || "Something went wrong sending your response. Please check your connection and try again."
+          );
         });
       return;
     }
@@ -521,7 +564,7 @@
       .then(function () { showSuccess(); })
       .catch(function (err) {
         console.error("[JFT Survey] Submission failed:", err);
-        submitBtn.disabled = false;
+        resetSubmitButton();
         showError(QUESTIONS[current].id, "Something went wrong sending your response. Please check your connection and try again.");
       });
   }

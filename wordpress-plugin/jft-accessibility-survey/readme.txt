@@ -4,7 +4,7 @@ Tags: survey, accessibility, form, google sheets
 Requires at least: 5.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,11 @@ Yes. Enable both — the plugin saves to your Sheet and sends an email notificat
 The survey runs in demo mode: it shows the success screen and logs the payload to the browser console, but nothing is saved.
 
 == Changelog ==
+
+= 1.1.1 =
+* Clearer submit errors when WordPress returns HTML instead of JSON (fixes Safari "string did not match the expected pattern").
+* Flush rewrite rules on plugin activation so the REST submit endpoint is registered.
+* Settings page shows submit endpoint URL and troubleshooting tips.
 
 = 1.1.0 =
 * Email notification settings (recipients, subject, on/off).

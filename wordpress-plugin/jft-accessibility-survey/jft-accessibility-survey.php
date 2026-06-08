@@ -3,7 +3,7 @@
  * Plugin Name:       JFT Accessibility Survey
  * Plugin URI:        https://github.com/odd-even/jft-accessibility-survey
  * Description:       Embeds the Jolly Farmer Transport accessibility survey on any page or post. Responses go to Google Sheets and/or email.
- * Version:           1.1.0
+ * Version:           1.1.1
  * Requires at least: 5.8
  * Requires PHP:      7.4
  * Author:            Jolly Farmer Transport
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'JFT_SURVEY_VERSION', '1.1.0' );
+define( 'JFT_SURVEY_VERSION', '1.1.1' );
 define( 'JFT_SURVEY_PLUGIN_FILE', __FILE__ );
 define( 'JFT_SURVEY_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'JFT_SURVEY_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -413,6 +413,18 @@ final class JFT_Accessibility_Survey_Plugin {
 			<h1><?php esc_html_e( 'JFT Accessibility Survey', 'jft-accessibility-survey' ); ?></h1>
 			<p><?php esc_html_e( 'Add the survey to any page or post with this shortcode:', 'jft-accessibility-survey' ); ?></p>
 			<p><code>[jft_accessibility_survey]</code></p>
+			<p class="description">
+				<?php
+				printf(
+					/* translators: %s: REST API submit URL */
+					esc_html__( 'Submit endpoint: %s', 'jft-accessibility-survey' ),
+					'<code>' . esc_html( rest_url( 'jft-survey/v1/submit' ) ) . '</code>'
+				);
+				?>
+			</p>
+			<p class="description">
+				<?php esc_html_e( 'If submissions fail, open Settings → Permalinks and click Save (no changes needed), then retry. Also exclude the survey page from full-page caching so the security token stays valid.', 'jft-accessibility-survey' ); ?>
+			</p>
 
 			<?php if ( $nothing_set ) : ?>
 				<div class="notice notice-warning inline">
@@ -528,3 +540,18 @@ final class JFT_Accessibility_Survey_Plugin {
 }
 
 JFT_Accessibility_Survey_Plugin::instance();
+
+register_activation_hook(
+	JFT_SURVEY_PLUGIN_FILE,
+	static function (): void {
+		JFT_Accessibility_Survey_Plugin::instance()->register_rest_routes();
+		flush_rewrite_rules();
+	}
+);
+
+register_deactivation_hook(
+	JFT_SURVEY_PLUGIN_FILE,
+	static function (): void {
+		flush_rewrite_rules();
+	}
+);
