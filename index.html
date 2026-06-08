@@ -194,6 +194,33 @@
 
   #jft-survey .jft-option-text { font-size: 1rem; line-height: 1.45; padding-top: 2px; }
 
+  /* "None of the above" tag */
+  #jft-survey .jft-tag {
+    display: inline-block;
+    margin-left: 8px;
+    vertical-align: middle;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--jft-muted);
+    background: #eef1ef;
+    border: 1px solid var(--jft-line);
+    border-radius: 999px;
+    padding: 3px 9px;
+    white-space: nowrap;
+  }
+  /* visually set the exclusive option apart from the others */
+  #jft-survey .jft-option-exclusive {
+    border-style: dashed;
+    background: #f7f9f8;
+  }
+  #jft-survey .jft-option-exclusive:has(input:checked) .jft-tag {
+    color: var(--jft-green-dark);
+    background: #fff;
+    border-color: var(--jft-green);
+  }
+
   /* checked states */
   #jft-survey .jft-option:has(input:checked) {
     border-color: var(--jft-primary);
@@ -629,12 +656,14 @@
         var inputId = "jft-" + q.id + "-" + opt.value;
         var inputType = q.type === "radio" ? "radio" : "checkbox";
         var mark = q.type === "radio" ? ICON_DOT : ICON_CHECK;
-        html += '<label class="jft-option" data-type="' + inputType + '" for="' + inputId + '">';
+        html += '<label class="jft-option' + (opt.exclusive ? ' jft-option-exclusive' : '') + '" data-type="' + inputType + '"' +
+                (opt.exclusive ? ' data-exclusive="true"' : '') + ' for="' + inputId + '">';
         html += '<input type="' + inputType + '" name="' + q.id + '" id="' + inputId + '" value="' + opt.value + '"' +
                 (opt.exclusive ? ' data-exclusive="true"' : '') +
                 (opt.other ? ' data-other="true"' : '') + ' />';
         html += '<span class="jft-mark" aria-hidden="true">' + mark + '</span>';
-        html += '<span class="jft-option-text">' + escapeHtml(opt.label) + '</span>';
+        html += '<span class="jft-option-text">' + escapeHtml(opt.label) +
+                (opt.exclusive ? '<span class="jft-tag" aria-hidden="true">None of the above</span>' : '') + '</span>';
         html += '</label>';
         if (opt.other) {
           html += '<div class="jft-other-wrap" id="jft-otherwrap-' + q.id + '">' +
