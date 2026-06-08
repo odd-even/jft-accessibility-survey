@@ -196,9 +196,8 @@
 
   /* "None of the above" tag */
   #jft-survey .jft-tag {
-    display: inline-block;
-    margin-left: 8px;
-    vertical-align: middle;
+    display: table;
+    margin: 0 0 5px;
     font-size: 0.68rem;
     font-weight: 700;
     letter-spacing: 0.04em;
@@ -662,8 +661,9 @@
                 (opt.exclusive ? ' data-exclusive="true"' : '') +
                 (opt.other ? ' data-other="true"' : '') + ' />';
         html += '<span class="jft-mark" aria-hidden="true">' + mark + '</span>';
-        html += '<span class="jft-option-text">' + escapeHtml(opt.label) +
-                (opt.exclusive ? '<span class="jft-tag" aria-hidden="true">None of the above</span>' : '') + '</span>';
+        html += '<span class="jft-option-text">' +
+                (opt.exclusive ? '<span class="jft-tag" aria-hidden="true">None of the above</span>' : '') +
+                escapeHtml(opt.label) + '</span>';
         html += '</label>';
         if (opt.other) {
           html += '<div class="jft-other-wrap" id="jft-otherwrap-' + q.id + '">' +
