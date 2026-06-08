@@ -3,7 +3,7 @@
  * Plugin Name:       JFT Accessibility Survey
  * Plugin URI:        https://github.com/odd-even/jft-accessibility-survey
  * Description:       Embeds the Jolly Farmer Transport accessibility survey on any page or post. Responses go to Google Sheets and/or email.
- * Version:           1.1.4
+ * Version:           1.2.0
  * Requires at least: 5.8
  * Requires PHP:      7.4
  * Author:            Jolly Farmer Transport
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'JFT_SURVEY_VERSION', '1.1.4' );
+define( 'JFT_SURVEY_VERSION', '1.2.0' );
 define( 'JFT_SURVEY_PLUGIN_FILE', __FILE__ );
 define( 'JFT_SURVEY_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'JFT_SURVEY_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -49,6 +49,8 @@ final class JFT_Accessibility_Survey_Plugin {
 	private function __construct() {
 		add_action( 'init', array( $this, 'register_shortcode' ) );
 		add_action( 'rest_api_init', array( $this, 'register_rest_routes' ) );
+		add_action( 'wp_ajax_jft_survey_submit', array( $this, 'handle_ajax_submission' ) );
+		add_action( 'wp_ajax_nopriv_jft_survey_submit', array( $this, 'handle_ajax_submission' ) );
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
 		add_action( 'admin_menu', array( $this, 'register_settings_page' ) );
 		add_filter( 'plugin_action_links_' . plugin_basename( JFT_SURVEY_PLUGIN_FILE ), array( $this, 'plugin_action_links' ) );
@@ -93,6 +95,9 @@ final class JFT_Accessibility_Survey_Plugin {
 			'jft-accessibility-survey',
 			'jftSurveyConfig',
 			array(
+				'ajaxUrl'    => admin_url( 'admin-ajax.php' ),
+				'ajaxAction' => 'jft_survey_submit',
+				'ajaxNonce'  => wp_create_nonce( 'jft_survey_submit' ),
 				'restUrl'    => esc_url_raw( rest_url( 'jft-survey/v1/submit' ) ),
 				'nonce'      => wp_create_nonce( 'wp_rest' ),
 				'storageKey' => 'jft-accessibility-survey-v1',
@@ -127,7 +132,54 @@ final class JFT_Accessibility_Survey_Plugin {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public function handle_submission( WP_REST_Request $request ) {
-		$payload = $request->get_json_params();
+		$result = $this->process_submission( $request->get_json_params() );
+		if ( is_wp_error( $result ) ) {
+			return $result;
+		}
+		return new WP_REST_Response( $result, 200 );
+	}
+
+	/**
+	 * Handle submissions via admin-ajax.php (works when REST API / wp-json is blocked).
+	 */
+	public function handle_ajax_submission(): void {
+		if ( ! check_ajax_referer( 'jft_survey_submit', 'nonce', false ) ) {
+			wp_send_json(
+				array(
+					'success' => false,
+					'message' => __( 'Your session expired. Please refresh the page and try again.', 'jft-accessibility-survey' ),
+				),
+				403
+			);
+		}
+
+		$raw     = isset( $_POST['payload'] ) ? wp_unslash( $_POST['payload'] ) : '';
+		$payload = is_string( $raw ) ? json_decode( $raw, true ) : null;
+
+		$result = $this->process_submission( $payload );
+		if ( is_wp_error( $result ) ) {
+			$status = 400;
+			$data   = $result->get_error_data();
+			if ( is_array( $data ) && isset( $data['status'] ) ) {
+				$status = (int) $data['status'];
+			}
+			wp_send_json(
+				array(
+					'success' => false,
+					'message' => $result->get_error_message(),
+				),
+				$status
+			);
+		}
+
+		wp_send_json( $result, 200 );
+	}
+
+	/**
+	 * @param mixed $payload Submission payload.
+	 * @return array<string, mixed>|WP_Error
+	 */
+	private function process_submission( $payload ) {
 		if ( ! is_array( $payload ) || empty( $payload['answers'] ) || ! is_array( $payload['answers'] ) ) {
 			return new WP_Error(
 				'jft_invalid_payload',
@@ -167,14 +219,11 @@ final class JFT_Accessibility_Survey_Plugin {
 			$demo_mode = true;
 		}
 
-		return new WP_REST_Response(
-			array(
-				'success'          => true,
-				'email_sent'       => $email_sent,
-				'sheets_forwarded' => $sheets_forwarded,
-				'demo_mode'        => $demo_mode,
-			),
-			200
+		return array(
+			'success'          => true,
+			'email_sent'       => $email_sent,
+			'sheets_forwarded' => $sheets_forwarded,
+			'demo_mode'        => $demo_mode,
 		);
 	}
 
@@ -416,14 +465,14 @@ final class JFT_Accessibility_Survey_Plugin {
 			<p class="description">
 				<?php
 				printf(
-					/* translators: %s: REST API submit URL */
+					/* translators: %s: admin-ajax submit URL */
 					esc_html__( 'Submit endpoint: %s', 'jft-accessibility-survey' ),
-					'<code>' . esc_html( rest_url( 'jft-survey/v1/submit' ) ) . '</code>'
+					'<code>' . esc_html( admin_url( 'admin-ajax.php?action=jft_survey_submit' ) ) . '</code>'
 				);
 				?>
 			</p>
 			<p class="description">
-				<?php esc_html_e( 'If submissions fail, open Settings → Permalinks and click Save (no changes needed), then retry. Also exclude the survey page from full-page caching so the security token stays valid.', 'jft-accessibility-survey' ); ?>
+				<?php esc_html_e( 'Submissions use admin-ajax.php (compatible with IIS and hosts where /wp-json/ is blocked). Exclude the survey page from full-page caching so the security token stays valid.', 'jft-accessibility-survey' ); ?>
 			</p>
 
 			<?php if ( $nothing_set ) : ?>

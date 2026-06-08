@@ -476,7 +476,7 @@
     }
   }
 
-  function parseRestResponse(res) {
+  function parseSubmitResponse(res) {
     return res.text().then(function (text) {
       var data = null;
       if (text) {
@@ -485,8 +485,8 @@
         } catch (e) {
           console.error("[JFT Survey] Non-JSON response from WordPress:", text.slice(0, 500));
           throw new Error(
-            "The server returned an unexpected response. This usually means the WordPress REST API is blocked or misconfigured. " +
-            "Try saving Settings \u2192 Permalinks, then check that " + (cfg.restUrl || "the REST endpoint") + " is reachable."
+            "The server returned an unexpected response. Please refresh the page and try again, " +
+            "or contact the site administrator if the problem continues."
           );
         }
       }
@@ -494,7 +494,7 @@
     });
   }
 
-  function getRestErrorMessage(res, data) {
+  function getSubmitErrorMessage(res, data) {
     if (data && typeof data.message === "string" && data.message) {
       return data.message;
     }
@@ -502,9 +502,60 @@
       return "Your session expired. Please refresh the page and try again.";
     }
     if (res.status === 404) {
-      return "The survey submit endpoint was not found. Try deactivating and reactivating the plugin, then save Settings \u2192 Permalinks.";
+      return "The survey submit endpoint was not found. Please contact the site administrator.";
     }
     return "Submission failed (HTTP " + res.status + "). Please try again.";
+  }
+
+  function handleSubmitSuccess(data) {
+    if (data.demo_mode) {
+      console.log("[JFT Survey] Demo mode — configure Google Sheets or email in Settings \u2192 JFT Survey.");
+    }
+    showSuccess();
+  }
+
+  function submitViaAjax(payload) {
+    var body = new FormData();
+    body.append("action", cfg.ajaxAction || "jft_survey_submit");
+    body.append("nonce", cfg.ajaxNonce || "");
+    body.append("payload", JSON.stringify(payload));
+
+    return fetch(cfg.ajaxUrl, {
+      method: "POST",
+      credentials: "same-origin",
+      body: body
+    })
+      .then(parseSubmitResponse)
+      .then(function (result) {
+        var res = result.res;
+        var data = result.data;
+        if (!res.ok || !data || data.success !== true) {
+          throw new Error(getSubmitErrorMessage(res, data));
+        }
+        handleSubmitSuccess(data);
+      });
+  }
+
+  function submitViaRest(payload) {
+    return fetch(cfg.restUrl, {
+      method: "POST",
+      credentials: "same-origin",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "X-WP-Nonce": cfg.nonce || ""
+      },
+      body: JSON.stringify(payload)
+    })
+      .then(parseSubmitResponse)
+      .then(function (result) {
+        var res = result.res;
+        var data = result.data;
+        if (!res.ok || !data || data.success !== true) {
+          throw new Error(getSubmitErrorMessage(res, data));
+        }
+        handleSubmitSuccess(data);
+      });
   }
 
   function onSubmit(e) {
@@ -515,29 +566,21 @@
     submitBtn.disabled = true;
     submitBtn.querySelector("svg") && (submitBtn.firstChild.nodeValue = "Submitting\u2026 ");
 
+    if (cfg.ajaxUrl) {
+      submitViaAjax(payload)
+        .catch(function (err) {
+          console.error("[JFT Survey] Submission failed:", err);
+          resetSubmitButton();
+          showError(
+            QUESTIONS[current].id,
+            err.message || "Something went wrong sending your response. Please check your connection and try again."
+          );
+        });
+      return;
+    }
+
     if (cfg.restUrl) {
-      fetch(cfg.restUrl, {
-        method: "POST",
-        credentials: "same-origin",
-        headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json",
-          "X-WP-Nonce": cfg.nonce || ""
-        },
-        body: JSON.stringify(payload)
-      })
-        .then(parseRestResponse)
-        .then(function (result) {
-          var res = result.res;
-          var data = result.data;
-          if (!res.ok || !data || data.success !== true) {
-            throw new Error(getRestErrorMessage(res, data));
-          }
-          if (data.demo_mode) {
-            console.log("[JFT Survey] Demo mode — configure Google Sheets or email in Settings \u2192 JFT Survey.", payload);
-          }
-          showSuccess();
-        })
+      submitViaRest(payload)
         .catch(function (err) {
           console.error("[JFT Survey] Submission failed:", err);
           resetSubmitButton();

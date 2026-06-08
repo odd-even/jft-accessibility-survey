@@ -4,7 +4,7 @@ Tags: survey, accessibility, form, google sheets
 Requires at least: 5.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.1.3
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,9 @@ Yes. Enable both — the plugin saves to your Sheet and sends an email notificat
 The survey runs in demo mode: it shows the success screen and logs the payload to the browser console, but nothing is saved.
 
 == Changelog ==
+
+= 1.2.0 =
+* Submit via admin-ajax.php instead of REST API (fixes IIS / blocked wp-json hosts).
 
 = 1.1.3 =
 * Use official JFT truck icon SVG in the header badge.
