@@ -42,6 +42,16 @@
   #jft-survey *::after { box-sizing: border-box; }
   #jft-survey [hidden] { display: none !important; }
 
+  /* Override WordPress/theme heading styles (e.g. sitewide uppercase h1/h2) */
+  #jft-survey h1,
+  #jft-survey h2,
+  #jft-survey .jft-title,
+  #jft-survey .jft-q-title,
+  #jft-survey legend h2 {
+    text-transform: none !important;
+    font-variant: normal;
+  }
+
   #jft-survey .jft-shell {
     width: 100%;
     max-width: 720px;
