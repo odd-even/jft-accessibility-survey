@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="jft-shell">
 		<header class="jft-header">
 			<span class="jft-badge">
-				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 17h4"/><path d="M3 17h2"/><path d="M15 17h2"/><path d="M13 17V6H4v11"/><path d="M13 9h4l3 5v3h-2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>
+				<svg viewBox="0 0 100.6 73.16" fill="currentColor" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M86.88,18.27h-13.71l-.01-18.27L8.95.04C3.86.04-.04,4.35,0,9.35v50.08l9.16.01c0,7.73,6.3,13.77,13.8,13.72,7.43-.05,13.63-6.06,13.62-13.73h27.44c0,7.74,6.3,13.78,13.8,13.73,7.44-.05,13.61-6.04,13.63-13.72l9.15-.01v-22.85l-13.72-18.31ZM23.75,66.22c-3.81.48-7.13-2.21-7.64-5.81-.53-3.78,2.11-7.35,6.07-7.75,3.93-.4,7.07,2.47,7.47,6.04.43,3.77-2.33,7.06-5.9,7.52ZM66.66,46.88H6.34V11.45c0-2.98,2.41-5.39,5.38-5.39h54.94v40.82ZM78.61,66.22c-3.81.48-7.13-2.21-7.64-5.81-.53-3.78,2.12-7.35,6.08-7.75,3.92-.4,7.07,2.47,7.47,6.04.42,3.77-2.33,7.06-5.91,7.52ZM73.17,36.57v-11.43l11.41.01,8.88,11.37-20.29.05Z"/></svg>
 				Jolly Farmer Transport
 			</span>
 			<h1 class="jft-title">Accessibility Survey</h1>
