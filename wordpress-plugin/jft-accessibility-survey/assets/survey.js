@@ -536,28 +536,6 @@
       });
   }
 
-  function submitViaRest(payload) {
-    return fetch(cfg.restUrl, {
-      method: "POST",
-      credentials: "same-origin",
-      headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-        "X-WP-Nonce": cfg.nonce || ""
-      },
-      body: JSON.stringify(payload)
-    })
-      .then(parseSubmitResponse)
-      .then(function (result) {
-        var res = result.res;
-        var data = result.data;
-        if (!res.ok || !data || data.success !== true) {
-          throw new Error(getSubmitErrorMessage(res, data));
-        }
-        handleSubmitSuccess(data);
-      });
-  }
-
   function submitViaSheets(payload) {
     return fetch(cfg.sheetsEndpoint, {
       method: "POST",
