@@ -3,7 +3,7 @@
  * Plugin Name:       JFT Accessibility Survey
  * Plugin URI:        https://github.com/odd-even/jft-accessibility-survey
  * Description:       Embeds the Jolly Farmer Transport accessibility survey on any page or post. Responses go to Google Sheets and/or email.
- * Version:           1.2.1
+ * Version:           1.2.2
  * Requires at least: 5.8
  * Requires PHP:      7.4
  * Author:            Jolly Farmer Transport
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'JFT_SURVEY_VERSION', '1.2.1' );
+define( 'JFT_SURVEY_VERSION', '1.2.2' );
 define( 'JFT_SURVEY_PLUGIN_FILE', __FILE__ );
 define( 'JFT_SURVEY_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'JFT_SURVEY_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -95,12 +95,12 @@ final class JFT_Accessibility_Survey_Plugin {
 			'jft-accessibility-survey',
 			'jftSurveyConfig',
 			array(
-				'ajaxUrl'    => admin_url( 'admin-ajax.php' ),
-				'ajaxAction' => 'jft_survey_submit',
-				'ajaxNonce'  => wp_create_nonce( 'jft_survey_submit' ),
-				'restUrl'    => esc_url_raw( rest_url( 'jft-survey/v1/submit' ) ),
-				'nonce'      => wp_create_nonce( 'wp_rest' ),
-				'storageKey' => 'jft-accessibility-survey-v1',
+				'ajaxUrl'        => admin_url( 'admin-ajax.php' ),
+				'ajaxAction'     => 'jft_survey_submit',
+				'ajaxNonce'      => wp_create_nonce( 'jft_survey_submit' ),
+				'sheetsEndpoint' => esc_url_raw( (string) get_option( self::OPTION_ENDPOINT, '' ) ),
+				'storageKey'     => 'jft-accessibility-survey-v1',
+				'version'        => JFT_SURVEY_VERSION,
 			)
 		);
 
@@ -465,9 +465,9 @@ final class JFT_Accessibility_Survey_Plugin {
 			<p class="description">
 				<?php
 				printf(
-					/* translators: %s: admin-ajax submit URL */
-					esc_html__( 'Submit endpoint: %s', 'jft-accessibility-survey' ),
-					'<code>' . esc_html( admin_url( 'admin-ajax.php?action=jft_survey_submit' ) ) . '</code>'
+					/* translators: %s: plugin version number */
+					esc_html__( 'Plugin version: %s', 'jft-accessibility-survey' ),
+					esc_html( JFT_SURVEY_VERSION )
 				);
 				?>
 			</p>

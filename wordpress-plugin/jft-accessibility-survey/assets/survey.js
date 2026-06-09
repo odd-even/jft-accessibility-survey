@@ -558,6 +558,35 @@
       });
   }
 
+  function submitViaSheets(payload) {
+    return fetch(cfg.sheetsEndpoint, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    }).then(function () {
+      handleSubmitSuccess({});
+    });
+  }
+
+  function submitSurvey(payload) {
+    if (cfg.ajaxUrl) {
+      return submitViaAjax(payload).catch(function (err) {
+        if (cfg.sheetsEndpoint) {
+          console.warn("[JFT Survey] WordPress submit failed, sending directly to Google Sheets:", err);
+          return submitViaSheets(payload);
+        }
+        throw err;
+      });
+    }
+
+    if (cfg.sheetsEndpoint) {
+      return submitViaSheets(payload);
+    }
+
+    return Promise.reject(new Error("Survey is not configured. Please contact the site administrator."));
+  }
+
   function onSubmit(e) {
     e.preventDefault();
     if (!validate(current)) return;
@@ -566,49 +595,14 @@
     submitBtn.disabled = true;
     submitBtn.querySelector("svg") && (submitBtn.firstChild.nodeValue = "Submitting\u2026 ");
 
-    if (cfg.ajaxUrl) {
-      submitViaAjax(payload)
-        .catch(function (err) {
-          console.error("[JFT Survey] Submission failed:", err);
-          resetSubmitButton();
-          showError(
-            QUESTIONS[current].id,
-            err.message || "Something went wrong sending your response. Please check your connection and try again."
-          );
-        });
-      return;
-    }
-
-    if (cfg.restUrl) {
-      submitViaRest(payload)
-        .catch(function (err) {
-          console.error("[JFT Survey] Submission failed:", err);
-          resetSubmitButton();
-          showError(
-            QUESTIONS[current].id,
-            err.message || "Something went wrong sending your response. Please check your connection and try again."
-          );
-        });
-      return;
-    }
-
-    if (!JFT_ENDPOINT) {
-      console.log("[JFT Survey] Submission payload (demo mode):", payload);
-      setTimeout(function () { showSuccess(); }, 500);
-      return;
-    }
-
-    fetch(JFT_ENDPOINT, {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify(payload)
-    })
-      .then(function () { showSuccess(); })
+    submitSurvey(payload)
       .catch(function (err) {
         console.error("[JFT Survey] Submission failed:", err);
         resetSubmitButton();
-        showError(QUESTIONS[current].id, "Something went wrong sending your response. Please check your connection and try again.");
+        showError(
+          QUESTIONS[current].id,
+          err.message || "Something went wrong sending your response. Please check your connection and try again."
+        );
       });
   }
 

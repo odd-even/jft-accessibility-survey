@@ -4,7 +4,7 @@ Tags: survey, accessibility, form, google sheets
 Requires at least: 5.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,10 @@ Yes. Enable both — the plugin saves to your Sheet and sends an email notificat
 The survey runs in demo mode: it shows the success screen and logs the payload to the browser console, but nothing is saved.
 
 == Changelog ==
+
+= 1.2.2 =
+* Drop blocked REST API submit path; use admin-ajax with Google Sheets fallback.
+* Show plugin version on settings page.
 
 = 1.2.1 =
 * Override theme letter-spacing on question text and survey copy.
