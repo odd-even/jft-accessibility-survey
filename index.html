@@ -50,13 +50,22 @@
   #jft-survey *::after { box-sizing: border-box; }
   #jft-survey [hidden] { display: none !important; }
 
-  /* Override WordPress/theme heading styles (e.g. sitewide uppercase h1/h2) */
+  /* Override WordPress/theme typography (uppercase, wide letter-spacing, etc.) */
   #jft-survey h1,
   #jft-survey h2,
+  #jft-survey h3,
+  #jft-survey p,
+  #jft-survey label,
   #jft-survey .jft-title,
   #jft-survey .jft-q-title,
+  #jft-survey .jft-q-help,
+  #jft-survey .jft-option-text,
+  #jft-survey .jft-panel p,
+  #jft-survey .jft-footnote,
+  #jft-survey legend,
   #jft-survey legend h2 {
     text-transform: none !important;
+    letter-spacing: normal !important;
     font-variant: normal;
   }
 
@@ -78,8 +87,8 @@
     color: var(--jft-ink);
     font-weight: 600;
     font-size: 0.8rem;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+    letter-spacing: 0.04em !important;
+    text-transform: uppercase !important;
     padding: 8px 16px;
     border-radius: 999px;
     margin-bottom: 16px;
@@ -90,7 +99,7 @@
     font-size: clamp(1.4rem, 3.5vw, 2rem);
     font-weight: 300;
     margin: 0;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.01em !important;
     line-height: 1.2;
     margin-top: 4px;
   }

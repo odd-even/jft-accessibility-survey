@@ -3,7 +3,7 @@
  * Plugin Name:       JFT Accessibility Survey
  * Plugin URI:        https://github.com/odd-even/jft-accessibility-survey
  * Description:       Embeds the Jolly Farmer Transport accessibility survey on any page or post. Responses go to Google Sheets and/or email.
- * Version:           1.2.0
+ * Version:           1.2.1
  * Requires at least: 5.8
  * Requires PHP:      7.4
  * Author:            Jolly Farmer Transport
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'JFT_SURVEY_VERSION', '1.2.0' );
+define( 'JFT_SURVEY_VERSION', '1.2.1' );
 define( 'JFT_SURVEY_PLUGIN_FILE', __FILE__ );
 define( 'JFT_SURVEY_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'JFT_SURVEY_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
